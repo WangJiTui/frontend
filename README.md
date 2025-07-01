@@ -2,21 +2,6 @@
 
 一个基于React的AI驱动模拟面试系统，支持实时语音转文字、智能问答和视频录制功能。
 
-## 最新更新
-
-1. **代码清理和优化**
-   - 删除了 `RealTimeTranscription.js` 组件（使用Web Speech API的旧版本）
-   - 删除了 `speechToText.js` 服务（旧的讯飞服务实现）
-   - 删除了 `frontendSpeechToText.js` 和 `fallbackSpeechService.js` 服务
-   - 删除了 `FrontendRealTimeTranscription.js` 组件
-   - 简化了语音转写架构，统一使用 `rtasrService.js`
-   - 优化了 `RTASRTranscription` 组件的useEffect依赖管理
-   - 改进了错误处理和状态管理
-
-2. **配置文件完善**
-   - 创建了 `postcss.config.js` 配置文件
-   - 确保Tailwind CSS正常工作
-
 ## 功能特性
 
 - 🎯 **智能问答**: 根据面试方向提供专业问题，模拟真实面试场景
