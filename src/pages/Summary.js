@@ -38,7 +38,7 @@ const Summary = () => {
   const navigate = useNavigate();
   
   // 从路由状态中获取面试数据
-  const { answers, directions, summary } = location.state || {};
+  const { answers, directions, summary, resumeAnalysis } = location.state || {};
   const [isLoading, setIsLoading] = useState(false); // 加载状态
 
   /**
@@ -81,6 +81,32 @@ const Summary = () => {
       summaryText += `面试时间: ${new Date().toLocaleString()}\n`;
       summaryText += `问题数量: ${answers.length}\n\n`;
       
+      // 如果有简历分析结果，添加到报告中
+      if (resumeAnalysis) {
+        summaryText += `===== 简历分析结果 =====\n\n`;
+        
+        if (typeof resumeAnalysis === 'object' && resumeAnalysis !== null) {
+                     // 如果是对象，格式化显示
+           Object.entries(resumeAnalysis).forEach(([key, value]) => {
+             // 后端已经传中文字段名，无需映射
+             summaryText += `${key}:\n`;
+            
+            if (Array.isArray(value)) {
+              value.forEach((item, index) => {
+                summaryText += `${index + 1}. ${item}\n`;
+              });
+            } else if (typeof value === 'object') {
+              summaryText += JSON.stringify(value, null, 2);
+            } else {
+              summaryText += `${value}`;
+            }
+            summaryText += `\n\n`;
+          });
+        } else {
+          summaryText += `${resumeAnalysis}\n\n`;
+        }
+      }
+
       // 如果有总结信息，添加到报告中
       if (summary) {
         summaryText += `===== 面试评估结果 =====\n\n`;
@@ -220,6 +246,112 @@ const Summary = () => {
       {/* 主要内容区域 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
+          {/* 简历分析结果 */}
+          {resumeAnalysis && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <svg className="w-6 h-6 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                简历分析结果
+              </h2>
+              
+              {/* 动态渲染简历分析数据 */}
+              <div className="space-y-6">
+                {(() => {
+                                     // 直接使用后端传来的中文字段名
+                   const formatFieldName = (key) => {
+                     return key; // 后端已经传中文，无需映射
+                   };
+
+                                     const getFieldIcon = (key) => {
+                     // 基于中文字段名的图标映射
+                     const iconMapping = {
+                       '综合评分': '📊',
+                       '匹配度': '🎯',
+                       '技能清单': '🛠️',
+                       '工作经验': '💼',
+                       '教育背景': '🎓',
+                       '优势特点': '💪',
+                       '需要改进': '⚠️',
+                       '改进建议': '💡',
+                       '推荐建议': '📋',
+                       '总结': '📝',
+                       '详细分析': '🔍',
+                       '简历分析': '📄',
+                       '岗位分析': '💼',
+                       '匹配度分析': '🎯'
+                     };
+                     return iconMapping[key] || '📄';
+                   };
+
+                  // 检查是否为对象类型的数据
+                  if (typeof resumeAnalysis === 'object' && resumeAnalysis !== null) {
+                    // 如果是对象，遍历对象的所有键值对
+                    return Object.entries(resumeAnalysis).map(([key, value], index) => (
+                      <div key={key} className={`mb-6 last:mb-0 ${index > 0 ? 'border-t border-gray-100 pt-4' : ''}`}>
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                          <span className="text-xl mr-2">{getFieldIcon(key)}</span>
+                          {formatFieldName(key)}
+                        </h3>
+                        <div className="ml-8">
+                          {Array.isArray(value) ? (
+                            // 如果值是数组，渲染为美观的列表
+                            <div className="space-y-2">
+                              {value.map((item, index) => (
+                                <div key={index} className="flex items-start bg-gray-50 rounded-md p-3">
+                                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                  <div className="flex-1">
+                                    {typeof item === 'object' ? (
+                                      <pre className="text-sm text-gray-600 whitespace-pre-wrap">
+                                        {JSON.stringify(item, null, 2)}
+                                      </pre>
+                                    ) : (
+                                      <span className="text-gray-700">{String(item)}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : typeof value === 'object' ? (
+                            // 如果值是对象，使用卡片样式
+                            <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-green-400">
+                              <pre className="text-sm text-gray-600 whitespace-pre-wrap overflow-auto">
+                                {JSON.stringify(value, null, 2)}
+                              </pre>
+                            </div>
+                          ) : typeof value === 'number' ? (
+                            // 如果是数字，特别展示（可能是分数）
+                                                         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border-l-4 border-green-400">
+                               <span className="text-2xl font-bold text-green-600">{value}</span>
+                               {(key.includes('评分') || key.includes('匹配度')) && (
+                                 <span className="text-gray-500 ml-2">/ 100</span>
+                               )}
+                             </div>
+                          ) : (
+                            // 如果值是字符串，使用段落样式
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{String(value)}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ));
+                  } else {
+                    // 如果不是对象，直接显示内容
+                    return (
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <pre className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                          {String(resumeAnalysis)}
+                        </pre>
+                      </div>
+                    );
+                  }
+                })()}
+              </div>
+            </div>
+          )}
+
           {/* 面试总体评分 - 如果有summary的话 */}
           {summary && (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">

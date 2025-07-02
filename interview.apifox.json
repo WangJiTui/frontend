@@ -1,0 +1,2766 @@
+{
+  "apifoxProject": "1.0.0",
+  "$schema": {
+    "app": "apifox",
+    "type": "project",
+    "version": "1.2.0"
+  },
+  "info": {
+    "name": "interview",
+    "description": "",
+    "mockRule": {
+      "rules": [],
+      "enableSystemRule": true
+    }
+  },
+  "apiCollection": [
+    {
+      "name": "根目录",
+      "id": 59794514,
+      "auth": {},
+      "securityScheme": {},
+      "parentId": 0,
+      "serverId": "",
+      "description": "",
+      "identityPattern": {
+        "httpApi": {
+          "type": "methodAndPath",
+          "bodyType": "",
+          "fields": []
+        }
+      },
+      "shareSettings": {},
+      "visibility": "SHARED",
+      "moduleId": 5675988,
+      "preProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "postProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "inheritPostProcessors": {},
+      "inheritPreProcessors": {},
+      "items": [
+        {
+          "name": "user-controller",
+          "id": 60513927,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 5675988,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "regist",
+              "api": {
+                "id": "316324139",
+                "method": "post",
+                "path": "/api/student/regist",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231693",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "$ref": "#/definitions/180619799"
+                  },
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "user-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "regist",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 277293938,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231693,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "login",
+              "api": {
+                "id": "316324140",
+                "method": "post",
+                "path": "/api/student/login",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231694",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "$ref": "#/definitions/180619799"
+                  },
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "user-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "login",
+                "sourceUrl": "",
+                "ordering": 6,
+                "cases": [
+                  {
+                    "id": 277293939,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231694,
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\r\n    \"id\": 0,\r\n    \"username\": \"Littlebug\",\r\n    \"passwordHash\": \"Aa797789\",\r\n    \"email\": \"string\",\r\n    \"role\": {},\r\n    \"createdAt\": \"2019-08-24T14:15:22.123Z\"\r\n}",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  },
+                  {
+                    "id": 277704678,
+                    "type": "http",
+                    "path": null,
+                    "name": "wyl",
+                    "responseId": 711231694,
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\r\n    \"id\": 0,\r\n    \"username\": \"wangYiLi\",\r\n    \"passwordHash\": \"123456\",\r\n    \"email\": \"string\",\r\n    \"role\": {},\r\n    \"createdAt\": \"2019-08-24T14:15:22.123Z\"\r\n}",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {},
+                      "isDefaultUrlEncoding": 2,
+                      "disableUrlEncoding": false
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "checkStudentNumber",
+              "api": {
+                "id": "316324141",
+                "method": "post",
+                "path": "/api/student/checkStudentNumber",
+                "parameters": {
+                  "path": [],
+                  "query": [
+                    {
+                      "id": "JDw9oqiUfQ",
+                      "name": "userName",
+                      "required": true,
+                      "description": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231695",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "user-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "checkStudentNumber",
+                "sourceUrl": "",
+                "ordering": 12,
+                "cases": [
+                  {
+                    "id": 277293940,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231695,
+                    "parameters": {
+                      "path": [],
+                      "query": [
+                        {
+                          "name": "userName",
+                          "enable": true,
+                          "id": "h3AdpxUpPt",
+                          "relatedName": "userName"
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "userInfo",
+              "api": {
+                "id": "316324142",
+                "method": "get",
+                "path": "/api/student/getUserInfo",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "egK2slGn9l",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231696",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "user-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "userInfo",
+                "sourceUrl": "",
+                "ordering": 18,
+                "cases": [
+                  {
+                    "id": 277293941,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231696,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "name": "token",
+                          "value": "",
+                          "enable": true,
+                          "id": "A2ikaXVJpM",
+                          "relatedName": "token"
+                        }
+                      ]
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "interview-controller",
+          "id": 60513928,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 5675988,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "startinterview",
+              "api": {
+                "id": "316324143",
+                "method": "post",
+                "path": "/api/interviews/start",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "HGJRZiyLW7",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231697",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "interview-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "startinterview",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 277293942,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231697,
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "id": "r5TguqWrQ3",
+                          "relatedId": "u13XYHr7ok",
+                          "relatedName": "token",
+                          "value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ]
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [],
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": "{\"id\":\"temp.62063e0c-b788-4597-b230-3d363331d2eb\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"62063e0c-b788-4597-b230-3d363331d2eb\",\"requestIndex\":0,\"httpRequestId\":\"e5728e5a-169c-421a-a494-3b072308e285\"},\"type\":\"http\",\"response\":{\"id\":\"12d6139e-5a80-411a-bf96-3b9f0a57907d\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:00:58 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,101,115,115,97,103,101,34,58,34,115,117,99,99,101,115,115,34,44,34,100,97,116,97,34,58,34,92,34,232,175,183,231,174,128,229,141,149,228,187,139,231,187,141,228,184,128,228,184,139,230,130,168,232,135,170,229,183,177,239,188,140,229,140,133,230,139,172,230,130,168,231,154,132,230,138,128,230,156,175,232,131,140,230,153,175,229,146,140,229,183,165,228,189,156,231,187,143,229,142,134,239,188,140,233,135,141,231,130,185,232,175,180,232,175,180,228,184,142,228,186,186,229,183,165,230,153,186,232,131,189,231,174,151,230,179,149,231,155,184,229,133,179,231,154,132,231,187,143,233,170,140,92,34,34,125]},\"cookie\":[],\"responseTime\":7082,\"responseSize\":169,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":1.7080999985337257,\"wait\":5.449799999594688,\"dns\":0,\"tcp\":0,\"firstByte\":7075.058299995959,\"download\":0.7586000040173531,\"process\":0.04749999940395355,\"total\":7083.0222999975085}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"8080\",\"path\":[\"api\",\"interviews\",\"start\"],\"host\":[\"localhost\"],\"query\":[],\"variable\":[]},\"header\":[{\"disabled\":false,\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"localhost:8080\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Length\",\"value\":0,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://localhost:8080\",\"body\":{},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://localhost:8080/api/interviews/start\",\"headers\":[{\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"localhost:8080\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Length\",\"value\":\"0\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:00:58 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1751464851764,\"requestStart\":1751464851766,\"offset\":{\"request\":1.7080999985337257,\"socket\":7.157899998128414,\"response\":7082.216199994087,\"end\":7082.974799998105,\"lookup\":7.157899998128414,\"connect\":7.157899998128414,\"done\":7083.0222999975085}}}]}},\"responseValidation\":{\"schema\":{\"valid\":false,\"message\":\"data.data 应当是 object 类型\",\"errors\":[{\"keyword\":\"type\",\"dataPath\":\".data\",\"schemaPath\":\"#/definitions/180619800/properties/data/type\",\"params\":{\"type\":\"object\"},\"message\":\"应当是 object 类型\"}]},\"responseCode\":{\"valid\":true}},\"passed\":false,\"timings\":{\"started\":1751464851734,\"preProcessorsStarted\":1751464851746,\"preProcessorsCompleted\":1751464851746,\"postProcessorsStarted\":1751464858848,\"postProcessorsCompleted\":1751464858848,\"completed\":1751464858850},\"metaInfo\":{\"httpApiId\":316324143,\"httpApiCaseId\":277293942,\"httpApiName\":\"startinterview\",\"httpApiPath\":\"/api/interviews/start\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"成功\"}}",
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "getQuestion",
+              "api": {
+                "id": "316324144",
+                "method": "get",
+                "path": "/api/interviews/question",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "pj61RVCe42",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231698",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "interview-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "getQuestion",
+                "sourceUrl": "",
+                "ordering": 6,
+                "cases": [
+                  {
+                    "id": 277293943,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231698,
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "id": "5q7nVhuCBI",
+                          "relatedId": "LE8esmUIHT",
+                          "relatedName": "token",
+                          "value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDGzNDe01FEqLU4t8kwBitUCAOhOfvEvAAAA.6K8adTC0OVqTO_U1_eKmybgCWob3WmhDd1IG17m97Ozdk_eFZ8bZ8hj0XMvD-HIXjGgpsxJoPtvReYafDJ_Lrg",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ]
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [],
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": "{\"id\":\"temp.5d48c999-e5d6-4d5c-935c-41bf0ba8d2e0\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"5d48c999-e5d6-4d5c-935c-41bf0ba8d2e0\",\"requestIndex\":0,\"httpRequestId\":\"56d4d39e-0ca1-4c38-8419-10db19472c9e\"},\"type\":\"http\",\"response\":{\"id\":\"0d294b61-5f04-4bac-88d0-31bbfe9acb64\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 13:27:50 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,101,115,115,97,103,101,34,58,34,115,117,99,99,101,115,115,34,44,34,100,97,116,97,34,58,34,81,117,101,115,116,105,111,110,58,51,58,32,232,175,183,232,167,163,233,135,138,82,69,83,84,102,117,108,32,65,80,73,231,154,132,232,174,190,232,174,161,229,142,159,229,136,153,34,125]},\"cookie\":[],\"responseTime\":23030,\"responseSize\":89,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.500900000333786,\"wait\":0.8060999996960163,\"dns\":0.12159999832510948,\"tcp\":0.3142000027000904,\"firstByte\":23027.052999999374,\"download\":1.1176999993622303,\"process\":0.080400001257658,\"total\":23029.99390000105}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"8080\",\"path\":[\"api\",\"interviews\",\"question\"],\"host\":[\"localhost\"],\"query\":[],\"variable\":[]},\"header\":[{\"disabled\":false,\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDGzNDe01FEqLU4t8kwBitUCAOhOfvEvAAAA.6K8adTC0OVqTO_U1_eKmybgCWob3WmhDd1IG17m97Ozdk_eFZ8bZ8hj0XMvD-HIXjGgpsxJoPtvReYafDJ_Lrg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"localhost:8080\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true}],\"method\":\"GET\",\"baseUrl\":\"http://localhost:8080\",\"body\":{},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"GET\",\"href\":\"http://localhost:8080/api/interviews/question\",\"headers\":[{\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDGzNDe01FEqLU4t8kwBitUCAOhOfvEvAAAA.6K8adTC0OVqTO_U1_eKmybgCWob3WmhDd1IG17m97Ozdk_eFZ8bZ8hj0XMvD-HIXjGgpsxJoPtvReYafDJ_Lrg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"localhost:8080\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 13:27:50 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1751462847925,\"requestStart\":1751462847926,\"offset\":{\"request\":0.500900000333786,\"socket\":1.3070000000298023,\"lookup\":1.4285999983549118,\"connect\":1.7428000010550022,\"response\":23028.79580000043,\"end\":23029.91349999979,\"done\":23029.99390000105}}}]}},\"responseValidation\":{\"schema\":{\"valid\":false,\"message\":\"data.data 应当是 object 类型\",\"errors\":[{\"keyword\":\"type\",\"dataPath\":\".data\",\"schemaPath\":\"#/definitions/180619800/properties/data/type\",\"params\":{\"type\":\"object\"},\"message\":\"应当是 object 类型\"}]},\"responseCode\":{\"valid\":true}},\"passed\":false,\"timings\":{\"started\":1751462847879,\"preProcessorsStarted\":1751462847894,\"preProcessorsCompleted\":1751462847894,\"postProcessorsStarted\":1751462870968,\"postProcessorsCompleted\":1751462870968,\"completed\":1751462870971},\"metaInfo\":{\"httpApiId\":316324144,\"httpApiCaseId\":277293943,\"httpApiName\":\"getQuestion\",\"httpApiPath\":\"/api/interviews/question\",\"httpApiMethod\":\"get\",\"httpApiCaseName\":\"成功\"}}",
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "answerQuestion",
+              "api": {
+                "id": "316324145",
+                "method": "post",
+                "path": "/api/interviews/question",
+                "parameters": {
+                  "path": [],
+                  "query": [
+                    {
+                      "id": "0SncZGCGXa",
+                      "name": "answer",
+                      "required": true,
+                      "description": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "foZMmXO90a",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231699",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "multipart/form-data",
+                  "parameters": [
+                    {
+                      "id": "Pu0z4K5YV2",
+                      "name": "videoFile",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "file",
+                      "schema": {
+                        "type": "string",
+                        "format": "binary"
+                      }
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "interview-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "answerQuestion",
+                "sourceUrl": "",
+                "ordering": 12,
+                "cases": [
+                  {
+                    "id": 277293944,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231699,
+                    "parameters": {
+                      "query": [
+                        {
+                          "id": "m7gQDyCER8",
+                          "relatedId": "FMtmkYWOeI",
+                          "relatedName": "answer",
+                          "value": "此外，在算法工程化方面，有将复杂模型部署到边缘设备的经验，通过量化压缩使模型体积减小 70%，推理速度提升 3 倍，保障了低资源环境下的高效运行。",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ],
+                      "path": [],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "id": "FaYAQKGGqC",
+                          "relatedId": "wu5VWQggCm",
+                          "relatedName": "token",
+                          "value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ]
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [
+                        {
+                          "id": "k256Q4gb9X",
+                          "relatedId": "VCLGAZivQZ",
+                          "relatedName": "videoFile",
+                          "value": "file://D:\\Download\\share_c5c7bed84ad846a74a4f37ae2720d8921739245841321.mp4",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ],
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": "{\"id\":\"temp.e77ecd41-ca62-4a2a-8d25-ba82bea4b58a\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"e77ecd41-ca62-4a2a-8d25-ba82bea4b58a\",\"requestIndex\":0,\"httpRequestId\":\"de37dde5-5429-4841-b20f-6a710131f331\"},\"type\":\"http\",\"response\":{\"id\":\"1b92b8be-4f9e-4b37-9716-7974239de9a1\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:03:07 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,101,115,115,97,103,101,34,58,34,115,117,99,99,101,115,115,34,44,34,100,97,116,97,34,58,123,34,98,97,115,105,99,95,105,110,102,111,34,58,123,34,100,117,114,97,116,105,111,110,34,58,51,46,48,44,34,109,111,100,101,108,115,95,99,111,117,110,116,34,58,51,44,34,115,97,109,112,108,101,95,114,97,116,101,34,58,49,54,48,48,48,125,44,34,102,105,110,97,108,95,114,101,115,117,108,116,34,58,123,34,99,111,110,102,105,100,101,110,99,101,34,58,49,46,48,44,34,97,118,101,114,97,103,101,95,99,111,110,102,105,100,101,110,99,101,34,58,48,46,54,44,34,98,101,115,116,95,109,111,100,101,108,34,58,34,69,120,72,117,66,69,82,84,34,44,34,109,111,100,101,108,115,95,99,111,110,115,101,110,115,117,115,34,58,102,97,108,115,101,44,34,114,101,99,111,109,109,101,110,100,101,100,95,101,109,111,116,105,111,110,34,58,34,110,101,114,118,111,117,115,34,125,44,34,105,110,116,101,114,118,105,101,119,95,97,115,115,101,115,115,109,101,110,116,34,58,123,34,114,101,99,111,109,109,101,110,100,97,116,105,111,110,115,34,58,91,34,233,128,130,229,186,166,231,180,167,229,188,160,230,152,175,230,173,163,229,184,184,231,154,132,239,188,140,230,179,168,230,132,143,230,148,190,230,157,190,34,44,34,229,143,175,228,187,165,233,128,154,232,191,135,230,183,177,229,145,188,229,144,184,231,188,147,232,167,163,231,180,167,229,188,160,230,132,159,34,44,34,229,164,154,229,129,154,229,135,134,229,164,135,230,156,137,229,138,169,228,186,142,229,162,158,229,188,186,228,191,161,229,191,131,34,44,34,230,131,133,230,132,159,232,161,168,232,190,190,229,190,136,230,184,133,230,153,176,239,188,140,231,187,167,231,187,173,228,191,157,230,140,129,34,93,44,34,115,99,111,114,101,34,58,53,53,46,48,44,34,99,111,110,102,105,100,101,110,99,101,95,108,101,118,101,108,34,58,34,233,171,152,34,44,34,100,101,116,97,105,108,101,100,95,97,110,97,108,121,115,105,115,34,58,123,34,98,97,115,101,95,115,99,111,114,101,34,58,52,53,44,34,99,111,110,102,105,100,101,110,99,101,95,97,100,106,117,115,116,109,101,110,116,34,58,49,48,46,48,44,34,99,111,110,102,105,100,101,110,99,101,95,115,99,111,114,101,34,58,49,46,48,44,34,100,101,116,101,99,116,101,100,95,101,109,111,116,105,111,110,34,58,34,110,101,114,118,111,117,115,34,125,44,34,101,109,111,116,105,111,110,95,100,101,115,99,114,105,112,116,105,111,110,34,58,34,230,152,190,229,190,151,231,180,167,229,188,160,34,44,34,101,109,111,116,105,111,110,95,116,121,112,101,34,58,34,112,111,111,114,34,125,44,34,109,111,100,101,108,115,95,114,101,115,117,108,116,115,34,58,91,123,34,99,111,110,102,105,100,101,110,99,101,34,58,49,46,48,44,34,101,109,111,116,105,111,110,115,95,115,99,111,114,101,115,34,58,123,34,97,110,120,105,111,117,115,34,58,48,46,48,44,34,99,97,108,109,34,58,48,46,48,44,34,99,111,109,112,111,115,101,100,34,58,48,46,48,44,34,99,111,110,102,105,100,101,110,116,34,58,48,46,48,44,34,100,105,115,115,97,116,105,115,102,105,101,100,34,58,48,46,48,44,34,101,120,99,105,116,101,100,34,58,48,46,48,44,34,102,111,99,117,115,101,100,34,58,48,46,48,44,34,110,101,114,118,111,117,115,34,58,49,46,48,125,44,34,109,111,100,101,108,95,110,97,109,101,34,58,34,69,120,72,117,66,69,82,84,34,44,34,112,114,101,100,105,99,116,101,100,95,101,109,111,116,105,111,110,34,58,34,110,101,114,118,111,117,115,34,125,44,123,34,99,111,110,102,105,100,101,110,99,101,34,58,48,46,53,51,49,44,34,101,109,111,116,105,111,110,115,95,115,99,111,114,101,115,34,58,123,34,97,110,120,105,111,117,115,34,58,48,46,48,56,51,44,34,99,97,108,109,34,58,48,46,51,51,51,44,34,99,111,109,112,111,115,101,100,34,58,48,46,48,44,34,99,111,110,102,105,100,101,110,116,34,58,48,46,53,51,49,44,34,100,105,115,115,97,116,105,115,102,105,101,100,34,58,48,46,48,44,34,101,120,99,105,116,101,100,34,58,48,46,48,44,34,102,111,99,117,115,101,100,34,58,48,46,48,44,34,110,101,114,118,111,117,115,34,58,48,46,48,53,51,125,44,34,109,111,100,101,108,95,110,97,109,101,34,58,34,72,117,66,69,82,84,32,76,97,114,103,101,34,44,34,112,114,101,100,105,99,116,101,100,95,101,109,111,116,105,111,110,34,58,34,99,111,110,102,105,100,101,110,116,34,125,44,123,34,99,111,110,102,105,100,101,110,99,101,34,58,48,46,50,54,56,44,34,101,109,111,116,105,111,110,115,95,115,99,111,114,101,115,34,58,123,34,97,110,120,105,111,117,115,34,58,48,46,49,49,54,44,34,99,97,108,109,34,58,48,46,50,54,56,44,34,99,111,109,112,111,115,101,100,34,58,48,46,48,44,34,99,111,110,102,105,100,101,110,116,34,58,48,46,49,50,54,44,34,100,105,115,115,97,116,105,115,102,105,101,100,34,58,48,46,49,49,56,44,34,101,120,99,105,116,101,100,34,58,48,46,49,49,57,44,34,102,111,99,117,115,101,100,34,58,48,46,48,44,34,110,101,114,118,111,117,115,34,58,48,46,50,53,52,125,44,34,109,111,100,101,108,95,110,97,109,101,34,58,34,87,97,118,50,86,101,99,50,32,88,76,83,82,34,44,34,112,114,101,100,105,99,116,101,100,95,101,109,111,116,105,111,110,34,58,34,99,97,108,109,34,125,93,125,125]},\"cookie\":[],\"responseTime\":1877,\"responseSize\":1346,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":1.5762000009417534,\"wait\":0.2653999999165535,\"dns\":0,\"tcp\":0,\"firstByte\":1875.442000001669,\"download\":0.6574999988079071,\"process\":0.0210999995470047,\"total\":1877.9622000008821}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"8080\",\"path\":[\"api\",\"interviews\",\"question\"],\"host\":[\"localhost\"],\"query\":[{\"key\":\"answer\",\"value\":\"%E6%AD%A4%E5%A4%96%EF%BC%8C%E5%9C%A8%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%8C%96%E6%96%B9%E9%9D%A2%EF%BC%8C%E6%9C%89%E5%B0%86%E5%A4%8D%E6%9D%82%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%88%B0%E8%BE%B9%E7%BC%98%E8%AE%BE%E5%A4%87%E7%9A%84%E7%BB%8F%E9%AA%8C%EF%BC%8C%E9%80%9A%E8%BF%87%E9%87%8F%E5%8C%96%E5%8E%8B%E7%BC%A9%E4%BD%BF%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%A7%AF%E5%87%8F%E5%B0%8F%2070%25%EF%BC%8C%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E6%8F%90%E5%8D%87%203%20%E5%80%8D%EF%BC%8C%E4%BF%9D%E9%9A%9C%E4%BA%86%E4%BD%8E%E8%B5%84%E6%BA%90%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E9%AB%98%E6%95%88%E8%BF%90%E8%A1%8C%E3%80%82\"}],\"variable\":[]},\"header\":[{\"disabled\":false,\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"localhost:8080\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------065712925853995066505788\",\"system\":true},{\"key\":\"Content-Length\",\"value\":8987434,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://localhost:8080\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"videoFile\",\"type\":\"file\",\"src\":\"D:\\\\Download\\\\share_c5c7bed84ad846a74a4f37ae2720d8921739245841321.mp4\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://localhost:8080/api/interviews/question?answer=%E6%AD%A4%E5%A4%96%EF%BC%8C%E5%9C%A8%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%8C%96%E6%96%B9%E9%9D%A2%EF%BC%8C%E6%9C%89%E5%B0%86%E5%A4%8D%E6%9D%82%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%88%B0%E8%BE%B9%E7%BC%98%E8%AE%BE%E5%A4%87%E7%9A%84%E7%BB%8F%E9%AA%8C%EF%BC%8C%E9%80%9A%E8%BF%87%E9%87%8F%E5%8C%96%E5%8E%8B%E7%BC%A9%E4%BD%BF%E6%A8%A1%E5%9E%8B%E4%BD%93%E7%A7%AF%E5%87%8F%E5%B0%8F%2070%25%EF%BC%8C%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E6%8F%90%E5%8D%87%203%20%E5%80%8D%EF%BC%8C%E4%BF%9D%E9%9A%9C%E4%BA%86%E4%BD%8E%E8%B5%84%E6%BA%90%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E9%AB%98%E6%95%88%E8%BF%90%E8%A1%8C%E3%80%82\",\"headers\":[{\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"localhost:8080\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------065712925853995066505788\"},{\"key\":\"Content-Length\",\"value\":\"8987434\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:03:07 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1751464985208,\"requestStart\":1751464985210,\"offset\":{\"request\":1.5762000009417534,\"socket\":1.8416000008583069,\"response\":1877.2836000025272,\"end\":1877.9411000013351,\"lookup\":1.8416000008583069,\"connect\":1.8416000008583069,\"done\":1877.9622000008821}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1751464985148,\"preProcessorsStarted\":1751464985163,\"preProcessorsCompleted\":1751464985163,\"postProcessorsStarted\":1751464987089,\"postProcessorsCompleted\":1751464987089,\"completed\":1751464987090},\"metaInfo\":{\"httpApiId\":316324145,\"httpApiCaseId\":277293944,\"httpApiName\":\"answerQuestion\",\"httpApiPath\":\"/api/interviews/question\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"成功\"}}",
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "createInterview",
+              "api": {
+                "id": "316324146",
+                "method": "post",
+                "path": "/api/interviews/create",
+                "parameters": {
+                  "path": [],
+                  "query": [
+                    {
+                      "id": "jZDMRrqbln",
+                      "name": "position",
+                      "required": true,
+                      "description": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "AEcdMM8ELa",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711231700",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "multipart/form-data",
+                  "parameters": [
+                    {
+                      "id": "pM5YiM4vWw",
+                      "name": "resume_file",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "file",
+                      "schema": {
+                        "type": "string",
+                        "format": "binary"
+                      }
+                    },
+                    {
+                      "id": "AraGLy2yB4",
+                      "name": "job_file",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "file",
+                      "schema": {
+                        "type": "string",
+                        "format": "binary"
+                      }
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "interview-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "createInterview",
+                "sourceUrl": "",
+                "ordering": 18,
+                "cases": [
+                  {
+                    "id": 277293945,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711231700,
+                    "parameters": {
+                      "query": [
+                        {
+                          "id": "Y5YJbJv3sA",
+                          "relatedId": "TuZZnOVg3h",
+                          "relatedName": "position",
+                          "value": "ai工程师",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ],
+                      "path": [],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "id": "l8GexAtwss",
+                          "relatedId": "CCg3GpTDkU",
+                          "relatedName": "token",
+                          "value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ]
+                    },
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "header": [],
+                      "cookie": []
+                    },
+                    "requestBody": {
+                      "parameters": [
+                        {
+                          "id": "eb5rVWCWan",
+                          "relatedId": "hBMeD16SKa",
+                          "relatedName": "resume_file",
+                          "value": "file://D:\\Download\\简历.pdf",
+                          "enable": true,
+                          "isDelete": false
+                        },
+                        {
+                          "id": "bWrrHwhsIX",
+                          "relatedId": "OJ4zZYDeSX",
+                          "relatedName": "job_file",
+                          "value": "file://D:\\Download\\job_requirement_ai_engineer.txt",
+                          "enable": true,
+                          "isDelete": false
+                        }
+                      ],
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": "{\"id\":\"temp.fef01a3d-b2cf-4e65-af3d-b4b8a6297415\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"fef01a3d-b2cf-4e65-af3d-b4b8a6297415\",\"requestIndex\":0,\"httpRequestId\":\"39000e54-cf55-4a14-a0fb-0aa4de487135\"},\"type\":\"http\",\"response\":{\"id\":\"0110229f-a44b-40d2-9b90-bf85284dae99\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:00:26 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,101,115,115,97,103,101,34,58,34,115,117,99,99,101,115,115,34,44,34,100,97,116,97,34,58,34,123,92,34,115,116,97,116,117,115,92,34,58,92,34,115,117,99,99,101,115,115,92,34,44,92,34,109,101,115,115,97,103,101,92,34,58,92,34,229,140,185,233,133,141,229,186,166,229,136,134,230,158,144,229,174,140,230,136,144,92,34,44,92,34,109,97,116,99,104,95,114,101,112,111,114,116,92,34,58,123,92,34,116,111,116,97,108,95,115,99,111,114,101,92,34,58,48,46,49,49,51,53,52,55,52,56,51,55,48,53,51,49,50,57,53,44,92,34,109,97,116,99,104,95,108,101,118,101,108,92,34,58,92,34,228,184,141,229,140,185,233,133,141,92,34,44,92,34,118,101,99,116,111,114,95,115,105,109,105,108,97,114,105,116,121,92,34,58,123,92,34,115,105,109,105,108,97,114,105,116,121,95,115,99,111,114,101,92,34,58,48,46,49,54,55,55,51,55,52,49,56,53,50,54,53,54,52,54,50,44,92,34,114,101,115,117,109,101,95,108,101,110,103,116,104,92,34,58,54,44,92,34,106,111,98,95,108,101,110,103,116,104,92,34,58,49,51,53,48,125,44,92,34,108,108,109,95,97,110,97,108,121,115,105,115,92,34,58,123,92,34,111,118,101,114,97,108,108,95,115,99,111,114,101,92,34,58,48,46,49,44,92,34,109,97,116,99,104,95,108,101,118,101,108,92,34,58,92,34,228,184,141,229,140,185,233,133,141,92,34,44,92,34,115,107,105,108,108,95,97,110,97,108,121,115,105,115,92,34,58,123,92,34,115,99,111,114,101,92,34,58,48,46,49,44,92,34,109,97,116,99,104,101,100,95,115,107,105,108,108,115,92,34,58,91,93,44,92,34,109,105,115,115,105,110,103,95,115,107,105,108,108,115,92,34,58,91,92,34,80,121,116,104,111,110,231,188,150,231,168,139,92,34,44,92,34,230,149,176,230,141,174,231,187,147,230,158,132,229,146,140,231,174,151,230,179,149,229,159,186,231,161,128,92,34,44,92,34,80,121,84,111,114,99,104,230,136,150,84,101,110,115,111,114,70,108,111,119,230,161,134,230,158,182,92,34,44,92,34,76,105,110,117,120,230,147,141,228,189,156,231,179,187,231,187,159,92,34,44,92,34,71,105,116,231,137,136,230,156,172,230,142,167,229,136,182,92,34,44,92,34,232,174,161,231,174,151,230,156,186,232,167,134,232,167,137,92,34,44,92,34,232,135,170,231,132,182,232,175,173,232,168,128,229,164,132,231,144,134,92,34,44,92,34,230,183,177,229,186,166,229,173,166,228,185,160,92,34,44,92,34,230,149,176,230,141,174,229,164,132,231,144,134,92,34,93,125,44,92,34,101,120,112,101,114,105,101,110,99,101,95,97,110,97,108,121,115,105,115,92,34,58,123,92,34,115,99,111,114,101,92,34,58,48,46,49,44,92,34,100,101,115,99,114,105,112,116,105,111,110,92,34,58,92,34,231,174,128,229,142,134,228,191,161,230,129,175,228,184,141,232,182,179,239,188,140,230,151,160,230,179,149,232,175,132,228,188,176,92,34,125,44,92,34,115,116,114,101,110,103,116,104,115,92,34,58,91,92,34,230,151,160,230,179,149,232,175,134,229,136,171,92,34,93,44,92,34,119,101,97,107,110,101,115,115,101,115,92,34,58,91,92,34,228,191,161,230,129,175,228,184,165,233,135,141,228,184,141,232,182,179,92,34,93,44,92,34,105,110,116,101,114,118,105,101,119,95,102,111,99,117,115,92,34,58,91,92,34,232,166,129,230,177,130,229,174,140,230,149,180,231,174,128,229,142,134,92,34,93,44,92,34,114,101,99,111,109,109,101,110,100,97,116,105,111,110,92,34,58,123,92,34,100,101,99,105,115,105,111,110,92,34,58,92,34,228,184,141,230,142,168,232,141,144,92,34,44,92,34,114,101,97,115,111,110,92,34,58,92,34,228,191,161,230,129,175,228,184,141,232,182,179,92,34,125,44,92,34,97,110,97,108,121,115,105,115,95,115,117,109,109,97,114,121,92,34,58,92,34,231,174,128,229,142,134,228,191,161,230,129,175,228,184,141,232,182,179,239,188,140,230,151,160,230,179,149,232,175,132,228,188,176,92,34,125,44,92,34,114,101,99,111,109,109,101,110,100,97,116,105,111,110,92,34,58,123,92,34,100,101,99,105,115,105,111,110,92,34,58,92,34,228,184,141,230,142,168,232,141,144,92,34,44,92,34,114,101,97,115,111,110,92,34,58,92,34,228,191,161,230,129,175,228,184,141,232,182,179,92,34,125,44,92,34,115,116,114,101,110,103,116,104,115,92,34,58,91,92,34,230,151,160,230,179,149,232,175,134,229,136,171,92,34,93,44,92,34,119,101,97,107,110,101,115,115,101,115,92,34,58,91,92,34,228,191,161,230,129,175,228,184,165,233,135,141,228,184,141,232,182,179,92,34,93,44,92,34,105,110,116,101,114,118,105,101,119,95,102,111,99,117,115,92,34,58,91,92,34,232,166,129,230,177,130,229,174,140,230,149,180,231,174,128,229,142,134,92,34,93,44,92,34,97,110,97,108,121,115,105,115,95,115,117,109,109,97,114,121,92,34,58,92,34,231,174,128,229,142,134,228,191,161,230,129,175,228,184,141,232,182,179,239,188,140,230,151,160,230,179,149,232,175,132,228,188,176,92,34,44,92,34,97,110,97,108,121,115,105,115,95,109,101,116,104,111,100,92,34,58,92,34,229,143,140,232,189,168,229,136,182,239,188,154,229,144,145,233,135,143,231,155,184,228,188,188,229,186,166,32,43,32,76,76,77,229,136,134,230,158,144,92,34,125,44,92,34,99,97,110,100,105,100,97,116,101,95,110,97,109,101,92,34,58,92,34,229,128,153,233,128,137,228,186,186,92,34,44,92,34,106,111,98,95,116,105,116,108,101,92,34,58,92,34,228,186,186,229,183,165,230,153,186,232,131,189,231,174,151,230,179,149,229,183,165,231,168,139,229,184,136,92,34,125,34,125]},\"cookie\":[],\"responseTime\":56108,\"responseSize\":1385,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.7414999976754189,\"wait\":0.9343000054359436,\"dns\":0.16600000113248825,\"tcp\":1.5998999997973442,\"firstByte\":56103.230499997735,\"download\":1.4336000010371208,\"process\":0.03369999676942825,\"total\":56108.13949999958}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"8080\",\"path\":[\"api\",\"interviews\",\"create\"],\"host\":[\"localhost\"],\"query\":[{\"key\":\"position\",\"value\":\"ai%E5%B7%A5%E7%A8%8B%E5%B8%88\"}],\"variable\":[]},\"header\":[{\"disabled\":false,\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"localhost:8080\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------697799577176181381054188\",\"system\":true},{\"key\":\"Content-Length\",\"value\":24110,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://localhost:8080\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"resume_file\",\"type\":\"file\",\"src\":\"D:\\\\Download\\\\简历.pdf\"},{\"disabled\":false,\"key\":\"job_file\",\"type\":\"file\",\"src\":\"D:\\\\Download\\\\job_requirement_ai_engineer.txt\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://localhost:8080/api/interviews/create?position=ai%E5%B7%A5%E7%A8%8B%E5%B8%88\",\"headers\":[{\"key\":\"token\",\"value\":\"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSiox099ANDXYNUtJRSq0oULIyNDc1NDE3NDEy01EqLU4t8kxRsjKqBQCw04pkLwAAAA.1LyNRNIgxBh8Zm1OD2PJfo7U15DWRkAL725WbCgLjAOGmW_40J3UVNDT0dHecHiCHDPHmhkXDwY4SjCBVaP5Qg\"},{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"localhost:8080\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------697799577176181381054188\"},{\"key\":\"Content-Length\",\"value\":\"24110\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"},{\"key\":\"Transfer-Encoding\",\"value\":\"chunked\"},{\"key\":\"Date\",\"value\":\"Wed, 02 Jul 2025 14:00:26 GMT\"},{\"key\":\"Keep-Alive\",\"value\":\"timeout=60\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1751464770306,\"requestStart\":1751464770307,\"offset\":{\"request\":0.7414999976754189,\"socket\":1.6758000031113625,\"lookup\":1.8418000042438507,\"connect\":3.441700004041195,\"response\":56106.672200001776,\"end\":56108.10580000281,\"done\":56108.13949999958}}}]}},\"responseValidation\":{\"schema\":{\"valid\":false,\"message\":\"data.data 应当是 object 类型\",\"errors\":[{\"keyword\":\"type\",\"dataPath\":\".data\",\"schemaPath\":\"#/definitions/180619800/properties/data/type\",\"params\":{\"type\":\"object\"},\"message\":\"应当是 object 类型\"}]},\"responseCode\":{\"valid\":true}},\"passed\":false,\"timings\":{\"started\":1751464770251,\"preProcessorsStarted\":1751464770259,\"preProcessorsCompleted\":1751464770259,\"postProcessorsStarted\":1751464826416,\"postProcessorsCompleted\":1751464826416,\"completed\":1751464826418},\"metaInfo\":{\"httpApiId\":316324146,\"httpApiCaseId\":277293945,\"httpApiName\":\"createInterview\",\"httpApiPath\":\"/api/interviews/create\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"成功\"}}",
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "completeInterview",
+              "api": {
+                "id": "316895168",
+                "method": "post",
+                "path": "/api/interviews/complete",
+                "parameters": {
+                  "path": [],
+                  "query": [
+                    {
+                      "id": "JzMfOV2JpG",
+                      "name": "position",
+                      "required": true,
+                      "description": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "cookie": [],
+                  "header": [
+                    {
+                      "id": "FuyIwjtojF",
+                      "name": "token",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "712270835",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180619800"
+                    },
+                    "description": "OK",
+                    "contentType": "json",
+                    "mediaType": "*/*",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [
+                  "interview-controller"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "completeInterview",
+                "sourceUrl": "",
+                "ordering": 24,
+                "cases": [
+                  {
+                    "id": 277707428,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 712270835,
+                    "parameters": {
+                      "path": [],
+                      "query": [
+                        {
+                          "name": "position",
+                          "enable": true,
+                          "id": "dP78Hk08A4",
+                          "relatedName": "position"
+                        }
+                      ],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "name": "token",
+                          "value": "",
+                          "enable": true,
+                          "id": "qvj8nNKDRa",
+                          "relatedName": "token"
+                        }
+                      ]
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "匹配度分析",
+          "id": 60516221,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 5675988,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Analyze Resume Job Match",
+              "api": {
+                "id": "316335405",
+                "method": "post",
+                "path": "/api/match/analyze",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247560",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "分析简历与岗位的匹配度\n\nReturns:\n    详细的匹配度分析报告",
+                "tags": [
+                  "匹配度分析"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "analyze_resume_job_match_api_match_analyze_post",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 277304485,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247560,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "面试管理",
+          "id": 60516222,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 5675988,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Start Interview",
+              "api": {
+                "id": "316335406",
+                "method": "post",
+                "path": "/api/interview/start",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247561",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  },
+                  {
+                    "id": "711247562",
+                    "code": 422,
+                    "name": "参数错误",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180632279"
+                    },
+                    "description": "Validation Error",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "$ref": "#/definitions/180632281"
+                  },
+                  "oasExtensions": ""
+                },
+                "description": "开始面试会话（基于匹配度分析）\n\nArgs:\n    request: 包含session_id的请求对象\n\nReturns:\n    第一个面试问题内容",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "start_interview_api_interview_start_post",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 277304486,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247561,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "Submit Answer",
+              "api": {
+                "id": "316335407",
+                "method": "post",
+                "path": "/api/interview/answer",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247563",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  },
+                  {
+                    "id": "711247564",
+                    "code": 422,
+                    "name": "参数错误",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180632279"
+                    },
+                    "description": "Validation Error",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "$ref": "#/definitions/180632280"
+                  },
+                  "oasExtensions": ""
+                },
+                "description": "提交回答并获取下一个问题\n\nArgs:\n    interview_msg: 包含回答内容和会话ID的消息\n    \nReturns:\n    下一个面试问题内容",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "submit_answer_api_interview_answer_post",
+                "sourceUrl": "",
+                "ordering": 6,
+                "cases": [
+                  {
+                    "id": 277304487,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247563,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "Get Interview History",
+              "api": {
+                "id": "316335408",
+                "method": "get",
+                "path": "/api/interview/history/{session_id}",
+                "parameters": {
+                  "path": [
+                    {
+                      "id": "session_id#0",
+                      "name": "session_id",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string",
+                        "title": "Session Id"
+                      }
+                    }
+                  ],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247565",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  },
+                  {
+                    "id": "711247566",
+                    "code": 422,
+                    "name": "参数错误",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180632279"
+                    },
+                    "description": "Validation Error",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "获取面试对话历史\n\nArgs:\n    session_id: 会话ID\n    \nReturns:\n    完整的面试对话历史",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "get_interview_history_api_interview_history__session_id__get",
+                "sourceUrl": "",
+                "ordering": 12,
+                "cases": [
+                  {
+                    "id": 277304488,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247565,
+                    "parameters": {
+                      "path": [
+                        {
+                          "id": "session_id#0",
+                          "relatedId": "session_id#0",
+                          "relatedName": "session_id",
+                          "name": "session_id",
+                          "value": "",
+                          "enable": true
+                        }
+                      ],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "Get Candidate Info",
+              "api": {
+                "id": "316335409",
+                "method": "get",
+                "path": "/api/interview/candidate-info",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247567",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "获取当前候选人信息\n\nReturns:\n    候选人详细信息",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "get_candidate_info_api_interview_candidate_info_get",
+                "sourceUrl": "",
+                "ordering": 18,
+                "cases": [
+                  {
+                    "id": 277304489,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247567,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "End Interview",
+              "api": {
+                "id": "316335410",
+                "method": "post",
+                "path": "/api/interview/end/{session_id}",
+                "parameters": {
+                  "path": [
+                    {
+                      "id": "session_id#0",
+                      "name": "session_id",
+                      "required": true,
+                      "description": "",
+                      "example": "",
+                      "type": "string",
+                      "schema": {
+                        "type": "string",
+                        "title": "Session Id"
+                      }
+                    }
+                  ],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247568",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  },
+                  {
+                    "id": "711247569",
+                    "code": 422,
+                    "name": "参数错误",
+                    "headers": [],
+                    "jsonSchema": {
+                      "$ref": "#/definitions/180632279"
+                    },
+                    "description": "Validation Error",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "结束面试会话\n\nArgs:\n    session_id: 要结束的会话ID\n    \nReturns:\n    面试总结",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "end_interview_api_interview_end__session_id__post",
+                "sourceUrl": "",
+                "ordering": 24,
+                "cases": [
+                  {
+                    "id": 277304490,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247568,
+                    "parameters": {
+                      "path": [
+                        {
+                          "id": "session_id#0",
+                          "relatedId": "session_id#0",
+                          "relatedName": "session_id",
+                          "name": "session_id",
+                          "value": "",
+                          "enable": true
+                        }
+                      ],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            },
+            {
+              "name": "List Interview Sessions",
+              "api": {
+                "id": "316335411",
+                "method": "get",
+                "path": "/api/interview/sessions",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "711247570",
+                    "code": 200,
+                    "name": "成功",
+                    "headers": [],
+                    "jsonSchema": {},
+                    "description": "Successful Response",
+                    "contentType": "json",
+                    "mediaType": "application/json",
+                    "oasExtensions": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "列出所有活跃的面试会话\n\nReturns:\n    会话列表及其基本信息",
+                "tags": [
+                  "面试管理"
+                ],
+                "status": "released",
+                "serverId": "",
+                "operationId": "list_interview_sessions_api_interview_sessions_get",
+                "sourceUrl": "",
+                "ordering": 30,
+                "cases": [
+                  {
+                    "id": 277304491,
+                    "type": "http",
+                    "path": null,
+                    "name": "成功",
+                    "responseId": 711247570,
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 5675988,
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "oasExtensions": "",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Upload Files",
+          "api": {
+            "id": "316335403",
+            "method": "post",
+            "path": "/upload",
+            "parameters": {
+              "path": [],
+              "query": [],
+              "cookie": [],
+              "header": []
+            },
+            "auth": {},
+            "securityScheme": {},
+            "commonParameters": {},
+            "responses": [
+              {
+                "id": "711247557",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {},
+                "description": "Successful Response",
+                "contentType": "json",
+                "mediaType": "application/json",
+                "oasExtensions": ""
+              },
+              {
+                "id": "711247558",
+                "code": 422,
+                "name": "参数错误",
+                "headers": [],
+                "jsonSchema": {
+                  "$ref": "#/definitions/180632279"
+                },
+                "description": "Validation Error",
+                "contentType": "json",
+                "mediaType": "application/json",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [],
+            "requestBody": {
+              "type": "multipart/form-data",
+              "parameters": [
+                {
+                  "id": "Xe2uxuvRnp",
+                  "name": "resume_file",
+                  "required": true,
+                  "description": "PDF格式简历文件",
+                  "example": "",
+                  "type": "file",
+                  "schema": {
+                    "type": "string",
+                    "format": "binary",
+                    "title": "Resume File",
+                    "description": "PDF格式简历文件"
+                  }
+                },
+                {
+                  "id": "sEksWDuBDW",
+                  "name": "job_file",
+                  "required": true,
+                  "description": "TXT格式岗位要求文件",
+                  "example": "",
+                  "type": "file",
+                  "schema": {
+                    "type": "string",
+                    "format": "binary",
+                    "title": "Job File",
+                    "description": "TXT格式岗位要求文件"
+                  }
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "同时上传简历和岗位要求文件\n\nArgs:\n    resume_file: PDF格式简历文件\n    job_file: TXT格式岗位要求文件\n    \nReturns:\n    简历和岗位分析结果",
+            "tags": [],
+            "status": "released",
+            "serverId": "",
+            "operationId": "upload_files_upload_post",
+            "sourceUrl": "",
+            "ordering": 0,
+            "cases": [
+              {
+                "id": 277304483,
+                "type": "http",
+                "path": null,
+                "name": "成功",
+                "responseId": 711247557,
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "header": [],
+                  "cookie": []
+                },
+                "requestBody": {
+                  "parameters": [
+                    {
+                      "id": "AJPZpwTmJT",
+                      "relatedId": "Xe2uxuvRnp",
+                      "relatedName": "resume_file",
+                      "value": "file://D:\\Download\\简历.pdf",
+                      "enable": true,
+                      "isDelete": false
+                    },
+                    {
+                      "id": "5jRtSSkOOt",
+                      "relatedId": "sEksWDuBDW",
+                      "relatedName": "job_file",
+                      "value": "file://D:\\Download\\job_requirement_ai_engineer.txt",
+                      "enable": true,
+                      "isDelete": false
+                    }
+                  ],
+                  "generateMode": "normal"
+                },
+                "auth": {},
+                "securityScheme": {},
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "requestResult": null,
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            ],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": [],
+            "visibility": "INHERITED",
+            "moduleId": 5675988,
+            "oasExtensions": "",
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "Health Check",
+          "api": {
+            "id": "316335404",
+            "method": "get",
+            "path": "/health",
+            "parameters": {
+              "path": [],
+              "query": [],
+              "cookie": [],
+              "header": []
+            },
+            "auth": {},
+            "securityScheme": {},
+            "commonParameters": {},
+            "responses": [
+              {
+                "id": "711247559",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {},
+                "description": "Successful Response",
+                "contentType": "json",
+                "mediaType": "application/json",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [],
+            "requestBody": {
+              "type": "none",
+              "parameters": [],
+              "oasExtensions": ""
+            },
+            "description": "健康检查",
+            "tags": [],
+            "status": "released",
+            "serverId": "",
+            "operationId": "health_check_health_get",
+            "sourceUrl": "",
+            "ordering": 6,
+            "cases": [
+              {
+                "id": 277304484,
+                "type": "http",
+                "path": null,
+                "name": "成功",
+                "responseId": 711247559,
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "commonParameters": {},
+                "requestBody": {
+                  "parameters": [],
+                  "type": "none",
+                  "generateMode": "normal"
+                },
+                "auth": {},
+                "securityScheme": {},
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "requestResult": null,
+                "visibility": "INHERITED",
+                "moduleId": 5675988,
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {},
+                "inheritPreProcessors": {}
+              }
+            ],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": [],
+            "visibility": "INHERITED",
+            "moduleId": 5675988,
+            "oasExtensions": "",
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        }
+      ]
+    }
+  ],
+  "socketCollection": [],
+  "docCollection": [],
+  "webSocketCollection": [],
+  "socketIOCollection": [],
+  "responseCollection": [
+    {
+      "_databaseId": 6926368,
+      "updatedAt": "2025-06-23T09:39:41.000Z",
+      "name": "根目录",
+      "type": "root",
+      "children": [],
+      "moduleId": 5675988,
+      "parentId": 0,
+      "id": 6926368,
+      "ordering": [],
+      "items": []
+    }
+  ],
+  "schemaCollection": [
+    {
+      "id": 15048012,
+      "name": "根目录",
+      "visibility": "SHARED",
+      "moduleId": 5675988,
+      "items": [
+        {
+          "id": 15198537,
+          "name": "Schemas",
+          "visibility": "INHERITED",
+          "moduleId": 5675988,
+          "items": [
+            {
+              "name": "User",
+              "displayName": "",
+              "id": "#/definitions/180619799",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "passwordHash": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "object",
+                      "x-apifox-orders": []
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "id",
+                    "username",
+                    "passwordHash",
+                    "email",
+                    "role",
+                    "createdAt"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "Body_upload_files_upload_post",
+              "displayName": "Body_upload_files_upload_post",
+              "id": "#/definitions/180632278",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "properties": {
+                    "resume_file": {
+                      "type": "string",
+                      "format": "binary",
+                      "title": "Resume File",
+                      "description": "PDF格式简历文件"
+                    },
+                    "job_file": {
+                      "type": "string",
+                      "format": "binary",
+                      "title": "Job File",
+                      "description": "TXT格式岗位要求文件"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "resume_file",
+                    "job_file"
+                  ],
+                  "title": "Body_upload_files_upload_post",
+                  "x-apifox-orders": [
+                    "resume_file",
+                    "job_file"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "Result",
+              "displayName": "",
+              "id": "#/definitions/180619800",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "x-apifox-orders": []
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "HTTPValidationError",
+              "displayName": "HTTPValidationError",
+              "id": "#/definitions/180632279",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "properties": {
+                    "detail": {
+                      "items": {
+                        "$ref": "#/definitions/180632282"
+                      },
+                      "type": "array",
+                      "title": "Detail"
+                    }
+                  },
+                  "type": "object",
+                  "title": "HTTPValidationError",
+                  "x-apifox-orders": [
+                    "detail"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "InterviewMessage",
+              "displayName": "InterviewMessage",
+              "id": "#/definitions/180632280",
+              "description": "面试消息模型",
+              "schema": {
+                "jsonSchema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "title": "Message"
+                    },
+                    "session_id": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "Session Id"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "title": "InterviewMessage",
+                  "description": "面试消息模型",
+                  "x-apifox-orders": [
+                    "message",
+                    "session_id"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "InterviewStartRequest",
+              "displayName": "InterviewStartRequest",
+              "id": "#/definitions/180632281",
+              "description": "开始面试请求模型",
+              "schema": {
+                "jsonSchema": {
+                  "properties": {
+                    "session_id": {
+                      "type": "string",
+                      "title": "Session Id"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "session_id"
+                  ],
+                  "title": "InterviewStartRequest",
+                  "description": "开始面试请求模型",
+                  "x-apifox-orders": [
+                    "session_id"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            },
+            {
+              "name": "ValidationError",
+              "displayName": "ValidationError",
+              "id": "#/definitions/180632282",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "properties": {
+                    "loc": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "integer"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "title": "Location"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "Message"
+                    },
+                    "type": {
+                      "type": "string",
+                      "title": "Error Type"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                  ],
+                  "title": "ValidationError",
+                  "x-apifox-orders": [
+                    "loc",
+                    "msg",
+                    "type"
+                  ]
+                }
+              },
+              "visibility": "INHERITED",
+              "moduleId": 5675988
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "securitySchemeCollection": [
+    {
+      "id": 1430331,
+      "name": "根目录",
+      "items": [],
+      "ordering": []
+    }
+  ],
+  "requestCollection": [
+    {
+      "name": "根目录",
+      "children": [],
+      "ordering": [
+        "requestFolder.7038794"
+      ],
+      "items": []
+    }
+  ],
+  "apiTestCaseCollection": [
+    {
+      "name": "Root",
+      "children": [],
+      "items": []
+    }
+  ],
+  "testCaseReferences": [],
+  "environments": [],
+  "commonScripts": [],
+  "databaseConnections": [],
+  "globalVariables": [],
+  "commonParameters": null,
+  "projectSetting": {
+    "id": "6668835",
+    "auth": {},
+    "securityScheme": {},
+    "servers": [
+      {
+        "id": "default",
+        "name": "默认服务"
+      }
+    ],
+    "gateway": [],
+    "language": "zh-CN",
+    "apiStatuses": [
+      "developing",
+      "testing",
+      "released",
+      "deprecated"
+    ],
+    "mockSettings": {},
+    "preProcessors": [],
+    "postProcessors": [],
+    "advancedSettings": {
+      "enableJsonc": false,
+      "enableBigint": false,
+      "responseValidate": true,
+      "enableTestScenarioSetting": false,
+      "enableYAPICompatScript": false,
+      "isDefaultUrlEncoding": 2,
+      "publishedDocUrlRules": {
+        "defaultRule": "RESOURCE_KEY_ONLY",
+        "resourceKeyStandard": "NEW"
+      }
+    },
+    "initialDisabledMockIds": [],
+    "cloudMock": {
+      "security": "free",
+      "enable": false,
+      "tokenKey": "apifoxToken"
+    }
+  },
+  "customFunctions": [],
+  "projectAssociations": []
+}

@@ -20,15 +20,21 @@ const Interview = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 从路由状态中获取选中的面试方向，使用useMemo避免重复创建
+  // 从路由状态中获取选中的面试方向和简历文件，使用useMemo避免重复创建
   const selectedDirections = useMemo(() => 
     location.state?.selectedDirections || [], 
     [location.state?.selectedDirections]
   );
   
+  const resumeFile = useMemo(() => 
+    location.state?.resumeFile || null, 
+    [location.state?.resumeFile]
+  );
+  
   const [isInterviewComplete, setIsInterviewComplete] = useState(false); // 面试是否完成
   const [interviewAnswers, setInterviewAnswers] = useState([]); // 面试回答记录
   const [interviewSummary, setInterviewSummary] = useState(null); // 面试总结信息
+  const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null); // 简历分析结果
 
   // 检查服务器状态
   useEffect(() => {
@@ -36,15 +42,23 @@ const Interview = () => {
   }, []);
 
   /**
-   * 验证面试方向是否有效
-   * 如果没有选择方向，重定向到首页
+   * 验证面试方向和简历文件是否有效
+   * 如果没有选择方向或上传简历，重定向到首页
    */
   useEffect(() => {
     if (!selectedDirections || selectedDirections.length === 0) {
       console.warn('No interview directions selected, redirecting to home');
+      alert('面试方向信息丢失，请重新选择面试方向');
+      navigate('/', { replace: true });
+      return;
+    }
+    
+    if (!resumeFile) {
+      console.warn('No resume file provided, redirecting to home');
+      alert('简历文件信息丢失，请重新上传简历文件');
       navigate('/', { replace: true });
     }
-  }, [selectedDirections, navigate]);
+  }, [selectedDirections, resumeFile, navigate]);
 
   const checkServerStatus = async () => {
     try {
@@ -57,13 +71,15 @@ const Interview = () => {
 
   /**
    * 处理面试完成
-   * 保存面试答案、总结信息并设置完成状态
+   * 保存面试答案、总结信息、简历分析结果并设置完成状态
    * @param {Array} answers - 面试回答数组
    * @param {Object} summary - 面试总结信息（可选）
+   * @param {Object} resumeAnalysis - 简历分析结果（可选）
    */
-  const handleInterviewComplete = (answers, summary) => {
+  const handleInterviewComplete = (answers, summary, resumeAnalysis) => {
     setInterviewAnswers(answers);
     setInterviewSummary(summary);
+    setResumeAnalysisResult(resumeAnalysis);
     setIsInterviewComplete(true);
     
     // 自动跳转到总结页面
@@ -72,7 +88,8 @@ const Interview = () => {
         state: { 
           answers: answers,
           directions: selectedDirections,
-          summary: summary
+          summary: summary,
+          resumeAnalysis: resumeAnalysis
         } 
       });
     }, 2000); // 显示完成提示2秒后自动跳转
@@ -106,7 +123,8 @@ const Interview = () => {
       state: { 
         answers: interviewAnswers,
         directions: selectedDirections,
-        summary: interviewSummary
+        summary: interviewSummary,
+        resumeAnalysis: resumeAnalysisResult
       } 
     });
   };
@@ -119,6 +137,7 @@ const Interview = () => {
     setIsInterviewComplete(false);
     setInterviewAnswers([]);
     setInterviewSummary(null);
+    setResumeAnalysisResult(null);
   };
 
   /**
@@ -182,6 +201,7 @@ const Interview = () => {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20">
               <DialogueInterview
                 selectedDirections={selectedDirections}
+                resumeFile={resumeFile}
                 onInterviewComplete={handleInterviewComplete}
               />
             </div>

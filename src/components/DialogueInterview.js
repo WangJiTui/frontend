@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { createInterview, startInterview, getInterviewQuestion, submitAnswer, getInterviewSummary } from '../services/api';
+import { createInterview, startInterview, getInterviewQuestion, submitAnswer, getInterviewSummary, completeInterview } from '../services/api';
 import RTASRTranscription from './RTASRTranscription';
 import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 
-const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -18,6 +18,8 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
   const [isInterviewStarted, setIsInterviewStarted] = useState(false);
   const [isInterviewEnded, setIsInterviewEnded] = useState(false);
   const [sessionId, setSessionId] = useState('');
+  const [position, setPosition] = useState(''); // 存储职位信息
+  const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null); // 存储简历分析结果
   
   const rtasrRef = useRef(null);
   const videoRecorderRef = useRef(new VideoRecorder());
@@ -31,6 +33,162 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
     return () => {
       isMountedRef.current = false;
     };
+  }, []);
+
+  // 生成岗位描述文件
+  const generateJobDescriptionFile = useCallback((directions) => {
+    const directionMapping = {
+      "ai_engineer": {
+        title: "AI工程师",
+        description: `职位名称：AI工程师
+岗位职责：
+1. 负责AI算法研发与优化
+2. 开发机器学习和深度学习模型
+3. 处理大规模数据集，进行特征工程
+4. 与产品团队协作，将AI技术产品化
+5. 持续跟进AI领域前沿技术发展
+
+任职要求：
+1. 计算机、人工智能相关专业本科及以上学历
+2. 熟练掌握Python编程，了解TensorFlow/PyTorch等框架
+3. 具备扎实的数学基础，熟悉机器学习算法
+4. 有实际项目经验，能独立完成模型训练和部署
+5. 良好的团队协作和沟通能力
+
+薪资范围：20-40K`
+      },
+      "frontend_engineer": {
+        title: "前端工程师",
+        description: `职位名称：前端工程师
+岗位职责：
+1. 负责Web前端界面开发与维护
+2. 与UI/UX设计师协作，实现高质量用户界面
+3. 优化前端性能，提升用户体验
+4. 与后端工程师配合，完成数据交互
+5. 参与技术方案讨论，推动前端技术发展
+
+任职要求：
+1. 计算机相关专业本科及以上学历
+2. 熟练掌握HTML5、CSS3、JavaScript等前端技术
+3. 熟悉React、Vue等主流前端框架
+4. 了解前端工程化工具，如Webpack、Vite等
+5. 具备良好的代码规范和团队协作能力
+
+薪资范围：15-30K`
+      },
+      "backend_engineer": {
+        title: "后端工程师",
+        description: `职位名称：后端工程师
+岗位职责：
+1. 负责服务端应用开发与维护
+2. 设计和实现RESTful API接口
+3. 数据库设计与优化
+4. 系统架构设计与性能调优
+5. 参与技术选型和代码审查
+
+任职要求：
+1. 计算机相关专业本科及以上学历
+2. 熟练掌握Java、Python或Go等后端语言
+3. 熟悉Spring Boot、Django等开发框架
+4. 了解MySQL、Redis等数据存储技术
+5. 具备良好的系统设计和问题解决能力
+
+薪资范围：18-35K`
+      },
+      "data_engineer": {
+        title: "数据工程师",
+        description: `职位名称：数据工程师
+岗位职责：
+1. 构建和维护数据处理流水线
+2. 设计数据仓库和数据湖架构
+3. 开发ETL/ELT数据处理任务
+4. 监控数据质量，确保数据准确性
+5. 与数据科学家和分析师协作
+
+任职要求：
+1. 计算机、统计学相关专业本科及以上学历
+2. 熟练掌握SQL，了解大数据处理技术
+3. 熟悉Hadoop、Spark、Kafka等大数据工具
+4. 了解云平台数据服务，如AWS、阿里云等
+5. 具备良好的数据敏感度和解决问题能力
+
+薪资范围：20-40K`
+      },
+      "devops_engineer": {
+        title: "DevOps工程师",
+        description: `职位名称：DevOps工程师
+岗位职责：
+1. 构建和维护CI/CD流水线
+2. 管理云基础设施和容器化部署
+3. 监控系统性能，处理运维告警
+4. 自动化运维流程，提升部署效率
+5. 与开发团队协作，推进DevOps文化
+
+任职要求：
+1. 计算机相关专业本科及以上学历
+2. 熟练掌握Linux系统管理
+3. 了解Docker、Kubernetes等容器技术
+4. 熟悉Jenkins、GitLab CI等CI/CD工具
+5. 具备云平台使用经验，良好的自动化思维
+
+薪资范围：18-35K`
+      },
+      "product_manager": {
+        title: "产品经理",
+        description: `职位名称：产品经理
+岗位职责：
+1. 负责产品规划和需求分析
+2. 设计产品功能和用户体验流程
+3. 协调技术、设计、运营等团队资源
+4. 分析用户反馈，持续优化产品
+5. 制定产品发展策略和版本规划
+
+任职要求：
+1. 本科及以上学历，理工科背景优先
+2. 具备产品思维和用户洞察能力
+3. 熟悉产品设计流程和项目管理
+4. 良好的沟通协调和跨团队协作能力
+5. 有互联网产品经验者优先
+
+薪资范围：20-40K`
+      },
+      "qa_engineer": {
+        title: "测试工程师",
+        description: `职位名称：测试工程师
+岗位职责：
+1. 负责软件产品的质量保证
+2. 设计和执行测试用例
+3. 开发自动化测试脚本
+4. 性能测试和安全测试
+5. 缺陷跟踪和质量报告
+
+任职要求：
+1. 计算机相关专业本科及以上学历
+2. 熟悉软件测试理论和方法
+3. 掌握自动化测试工具，如Selenium等
+4. 了解性能测试工具，如JMeter等
+5. 具备良好的逻辑思维和细致耐心
+
+薪资范围：15-30K`
+      }
+    };
+
+    // 选择第一个方向作为主要岗位，或组合多个方向
+    const primaryDirection = directions[0];
+    const jobInfo = directionMapping[primaryDirection] || {
+      title: "通用技术岗位",
+      description: "通用技术岗位职责和要求"
+    };
+
+    // 如果有多个方向，生成复合岗位描述
+    if (directions.length > 1) {
+      const titles = directions.map(dir => directionMapping[dir]?.title || dir).join("/");
+      const description = `复合岗位：${titles}\n\n结合了以下领域的技能要求：\n${directions.map(dir => `- ${directionMapping[dir]?.title || dir}`).join('\n')}`;
+      
+      return new File([description], 'job_description.txt', { type: 'text/plain' });
+    }
+
+    return new File([jobInfo.description], 'job_description.txt', { type: 'text/plain' });
   }, []);
 
   // 开始录音录像的通用函数
@@ -99,18 +257,25 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
       setError('');
       
       // 第一步：创建面试会话
-      // 注意：这里需要适配后端API，暂时使用默认值
-      // TODO: 需要与后端协调API设计，或者修改前端业务逻辑来收集这些参数
-      const position = selectedDirections?.join(',') || '前端开发'; // 将方向转换为职位
-      const resume_file = new File([''], 'default_resume.pdf', { type: 'application/pdf' }); // 默认简历文件
-      const job_file = new File([''], 'default_job.pdf', { type: 'application/pdf' }); // 默认职位描述文件
+      // 检查必要的文件是否存在
+      if (!resumeFile) {
+        throw new Error('简历文件未上传，请返回首页上传简历文件');
+      }
       
-      const createResult = await createInterview(position, resume_file, job_file);
+      const currentPosition = selectedDirections?.join(',') || '前端开发'; // 将方向转换为职位
+      setPosition(currentPosition); // 保存职位信息到状态
+      
+      // 使用真实的简历文件和生成的岗位描述文件
+      const resume_file = resumeFile; // 用户上传的PDF简历文件
+      const job_file = generateJobDescriptionFile(selectedDirections); // 根据选择的方向生成岗位描述TXT文件
+      
+      const createResult = await createInterview(currentPosition, resume_file, job_file);
       if (!createResult.success) {
         throw new Error('创建面试会话失败');
       }
       
       setSessionId(createResult.sessionId);
+      setResumeAnalysisResult(createResult.resumeAnalysis); // 保存简历分析结果
       setFeedback('正在开始面试...');
       
       // 第二步：开始面试
@@ -148,7 +313,7 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
       console.error('开始面试失败:', error);
       setError(error.message);
     }
-  }, [selectedDirections, startRecording]);
+  }, [selectedDirections, resumeFile, generateJobDescriptionFile, startRecording]);
 
   // 发送回答并获取下一个问题或结束面试
   const handleSubmitAnswer = useCallback(async (answer) => {
@@ -193,8 +358,8 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
       setAnswers(prev => [...prev, newAnswer]);
 
       // 发送回答到后端
-      // 注意：后端API只接受videoFile参数，这里只传递视频文件
-      const submitResult = await submitAnswer(videoBlob || new Blob());
+      // 根据API文档，需要传递videoFile和answer两个参数
+      const submitResult = await submitAnswer(videoBlob || new Blob(), answer);
       
       if (submitResult.success) {
         // 获取下一个问题
@@ -208,15 +373,26 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
               setIsWaitingForAnswer(false);
               setCurrentQuestion('');
               setSubmissionState('submitted');
+              setFeedback('面试已完成，正在完成面试流程...');
+              
+              // 先调用完成面试接口
+              try {
+                await completeInterview(position);
+                console.log('面试完成接口调用成功');
+              } catch (completeError) {
+                console.error('完成面试接口调用失败:', completeError);
+                // 即使完成面试接口失败，也继续获取总结
+              }
+              
               setFeedback('面试已完成，正在获取分析结果...');
               
               // 获取面试总结
               try {
                 const summaryResult = await getInterviewSummary(sessionId);
                 if (summaryResult.success) {
-                  // 调用完成回调，传递总结信息
+                  // 调用完成回调，传递总结信息和简历分析结果
                   if (onInterviewComplete) {
-                    onInterviewComplete([...answers, newAnswer], summaryResult.summary);
+                    onInterviewComplete([...answers, newAnswer], summaryResult.summary, resumeAnalysisResult);
                   }
                   setFeedback('面试完成！正在跳转到总结页面...');
                 }
@@ -225,7 +401,7 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
                 setError('面试已完成，但获取总结失败');
                 // 即使获取总结失败，也要调用完成回调
                 if (onInterviewComplete) {
-                  onInterviewComplete([...answers, newAnswer]);
+                  onInterviewComplete([...answers, newAnswer], null, resumeAnalysisResult);
                 }
               }
             } else {

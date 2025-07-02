@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Button from "../components/Button";
 import InterviewDirectionSelector from "../components/InterviewDirectionSelector";
-import { getServerStatus, login, register, analyzeResume } from "../services/api";
+import { getServerStatus, login, register } from "../services/api";
 import ApiConfigModal from "../components/ApiConfigModal";
 
 /**
@@ -15,8 +15,8 @@ import ApiConfigModal from "../components/ApiConfigModal";
  * 功能：
  * - 显示面试方向选择界面
  * - 检查服务器连接状态
+ * - 简历文件上传
  * - 导航到面试页面
- * - 简历分析功能
  */
 const Home = () => {
   const navigate = useNavigate();
@@ -38,12 +38,8 @@ const Home = () => {
   const [showApiConfig, setShowApiConfig] = useState(false);
   const [apiUrl, setApiUrl] = useState("");
   
-  // 简历分析相关状态
+  // 简历文件相关状态（用于面试）
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const [showAnalysisResult, setShowAnalysisResult] = useState(false);
-  const [analysisDirection, setAnalysisDirection] = useState(''); // 简历分析方向
 
   /**
    * 检查服务器连接状态
@@ -77,7 +73,7 @@ const Home = () => {
 
   /**
    * 开始面试
-   * 验证是否选择了面试方向，然后导航到面试页面
+   * 验证是否选择了面试方向和简历文件，然后导航到面试页面
    */
   const handleStartInterview = () => {
     if (selectedDirections.length === 0) {
@@ -85,7 +81,17 @@ const Home = () => {
       return;
     }
     
-    navigate("/interview", { state: { selectedDirections } });
+    if (!selectedFile) {
+      alert("请先上传简历文件（PDF格式）");
+      return;
+    }
+    
+    navigate("/interview", { 
+      state: { 
+        selectedDirections,
+        resumeFile: selectedFile 
+      } 
+    });
   };
 
   /**
@@ -214,12 +220,28 @@ const Home = () => {
       // 检查文件类型
       if (file.type !== 'application/pdf') {
         alert('请选择PDF文件');
+        event.target.value = ''; // 清空输入框
         return;
       }
       
       // 检查文件大小（限制10MB）
       if (file.size > 10 * 1024 * 1024) {
         alert('文件大小不能超过10MB');
+        event.target.value = ''; // 清空输入框
+        return;
+      }
+
+      // 检查文件名和扩展名
+      if (!file.name.toLowerCase().endsWith('.pdf')) {
+        alert('文件扩展名必须为.pdf');
+        event.target.value = ''; // 清空输入框
+        return;
+      }
+
+      // 检查文件是否为空
+      if (file.size === 0) {
+        alert('选择的文件为空，请选择有效的PDF文件');
+        event.target.value = ''; // 清空输入框
         return;
       }
       
@@ -227,55 +249,7 @@ const Home = () => {
     }
   };
 
-  /**
-   * 处理简历分析
-   */
-  const handleResumeAnalysis = async () => {
-    if (!selectedFile) {
-      alert('请先选择PDF文件');
-      return;
-    }
 
-    if (!analysisDirection.trim()) {
-      alert('请输入分析方向');
-      return;
-    }
-
-    setIsAnalyzing(true);
-    
-    try {
-      const result = await analyzeResume(selectedFile, analysisDirection);
-      if (result.success) {
-        setAnalysisResult({
-          fileName: selectedFile.name,
-          fileSize: (selectedFile.size / 1024 / 1024).toFixed(2) + ' MB',
-          analysis: result.analysis,
-          direction: analysisDirection
-        });
-        setShowAnalysisResult(true);
-      }
-    } catch (error) {
-      console.error('简历分析失败:', error);
-      alert(error.message);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  /**
-   * 关闭分析结果弹窗
-   */
-  const closeAnalysisResult = () => {
-    setShowAnalysisResult(false);
-    setAnalysisResult(null);
-    setSelectedFile(null);
-    setAnalysisDirection('');
-    // 清空文件输入
-    const fileInput = document.getElementById('resume-upload');
-    if (fileInput) {
-      fileInput.value = '';
-    }
-  };
 
   if (!isLoggedIn) {
     return (
@@ -511,6 +485,63 @@ const Home = () => {
           </div>
         )}
 
+        {/* 简历文件上传 */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 border border-white/20">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            上传简历文件
+          </h2>
+          
+          <div className="max-w-lg mx-auto">
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  请选择简历文件（PDF格式，最大10MB）
+                </div>
+              </label>
+              
+              <div className="relative">
+                <input
+                  type="file"
+                  id="resume-upload"
+                  accept=".pdf"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="resume-upload"
+                  className="w-full flex items-center justify-center px-6 py-8 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
+                >
+                  <div className="text-center">
+                    <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <p className="text-lg text-gray-600 font-medium mb-2">
+                      {selectedFile ? selectedFile.name : '点击选择PDF文件或拖拽到此处'}
+                    </p>
+                    {selectedFile ? (
+                      <div className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2 inline-block">
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          已选择文件 - {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        支持PDF格式，用于面试时进行简历分析
+                      </p>
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 面试方向选择 */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 border border-white/20">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -542,102 +573,7 @@ const Home = () => {
           </Button>
         </div>
 
-        {/* 简历分析功能 */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 border border-white/20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            简历分析
-          </h2>
-          
-          <div className="max-w-md mx-auto">
-            {/* 分析方向输入框 */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                  分析方向
-                </div>
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                value={analysisDirection}
-                onChange={(e) => setAnalysisDirection(e.target.value)}
-                placeholder="例如：前端工程师、Java工程师、产品经理等"
-                disabled={isAnalyzing}
-              />
-            </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  选择简历文件（PDF格式，最大10MB）
-                </div>
-              </label>
-              
-              <div className="relative">
-                <input
-                  type="file"
-                  id="resume-upload"
-                  accept=".pdf"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="resume-upload"
-                  className="w-full flex items-center justify-center px-6 py-4 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
-                >
-                  <div className="text-center">
-                    <svg className="mx-auto h-12 w-12 text-gray-400 mb-3" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <p className="text-gray-600">
-                      {selectedFile ? selectedFile.name : '点击选择PDF文件或拖拽到此处'}
-                    </p>
-                    {selectedFile && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        文件大小: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    )}
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <Button
-                onClick={handleResumeAnalysis}
-                disabled={!selectedFile || !analysisDirection.trim() || isAnalyzing}
-                className={`font-bold py-3 px-8 rounded-xl text-base transition-all duration-200 transform hover:scale-105 shadow-lg ${
-                  selectedFile && analysisDirection.trim() && !isAnalyzing
-                    ? 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white'
-                    : 'bg-gray-400 cursor-not-allowed text-white'
-                }`}
-              >
-                {isAnalyzing ? (
-                  <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    分析中...
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    开始分析
-                  </div>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
 
         {/* 功能说明 */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
@@ -671,148 +607,7 @@ const Home = () => {
         onApiUrlChange={setApiUrl}
       />
 
-      {/* 简历分析结果弹窗 */}
-      {showAnalysisResult && analysisResult && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              {/* 弹窗标题 */}
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900">简历分析结果</h3>
-                <button
-                  onClick={closeAnalysisResult}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
 
-              {/* 文件信息 */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">文件信息</h4>
-                <p className="text-sm text-gray-600">文件名: {analysisResult.fileName}</p>
-                <p className="text-sm text-gray-600">文件大小: {analysisResult.fileSize}</p>
-              </div>
-
-              {/* 分析结果网格 */}
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* 技能分析 */}
-                <div className="bg-blue-50 rounded-xl p-4">
-                  <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                    核心技能
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {analysisResult.analysis.skills.map((skill, index) => (
-                      <span key={index} className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm font-medium">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 基本信息 */}
-                <div className="bg-green-50 rounded-xl p-4">
-                  <h4 className="font-semibold text-green-900 mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    基本信息
-                  </h4>
-                  <div className="space-y-2">
-                    <p className="text-sm text-green-800">
-                      <span className="font-medium">工作经验:</span> {analysisResult.analysis.experience}
-                    </p>
-                    <p className="text-sm text-green-800">
-                      <span className="font-medium">教育背景:</span> {analysisResult.analysis.education}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 优势分析 */}
-                <div className="bg-purple-50 rounded-xl p-4">
-                  <h4 className="font-semibold text-purple-900 mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    核心优势
-                  </h4>
-                  <ul className="space-y-2">
-                    {analysisResult.analysis.strengths.map((strength, index) => (
-                      <li key={index} className="text-sm text-purple-800 flex items-start">
-                        <svg className="w-4 h-4 mr-2 mt-0.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {strength}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* 改进建议 */}
-                <div className="bg-orange-50 rounded-xl p-4">
-                  <h4 className="font-semibold text-orange-900 mb-3 flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                    改进建议
-                  </h4>
-                  <ul className="space-y-2">
-                    {analysisResult.analysis.suggestions.map((suggestion, index) => (
-                      <li key={index} className="text-sm text-orange-800 flex items-start">
-                        <svg className="w-4 h-4 mr-2 mt-0.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {suggestion}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* 推荐职位 */}
-              <div className="bg-indigo-50 rounded-xl p-4 mt-6">
-                <h4 className="font-semibold text-indigo-900 mb-3 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h8zM16 10h.01" />
-                  </svg>
-                  推荐职位
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {analysisResult.analysis.recommendedPositions.map((position, index) => (
-                    <span key={index} className="px-4 py-2 bg-indigo-200 text-indigo-800 rounded-full text-sm font-medium">
-                      {position}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* 底部操作按钮 */}
-              <div className="flex justify-end mt-6 space-x-3">
-                <Button
-                  onClick={closeAnalysisResult}
-                  className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-medium transition-colors"
-                >
-                  关闭
-                </Button>
-                <Button
-                  onClick={() => {
-                    // 这里可以添加下载报告功能
-                    alert('下载功能待实现');
-                  }}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all"
-                >
-                  下载报告
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -187,33 +187,7 @@ export const getUserInfo = async () => {
   }
 };
 
-/**
- * 简历分析
- * @param {File} pdfFile - PDF简历文件
- * @param {string} direction - 分析方向
- * @returns {Promise} 分析结果
- */
-export const analyzeResume = async (pdfFile, direction) => {
-  try {
-    const formData = new FormData();
-    formData.append('resume', pdfFile);
-    formData.append('direction', direction);
-    
-    const response = await apiClient.post('/analyze-resume', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return {
-      success: true,
-      analysis: response.data
-    };
-  } catch (error) {
-    console.error('Resume analysis error:', error);
-    throw new Error(error.response?.data?.message || '简历分析失败，请稍后重试');
-  }
-};
+
 
 /**
  * 创建面试会话
@@ -238,6 +212,7 @@ export const createInterview = async (position, resume_file, job_file) => {
       return {
         success: true,
         sessionId: response.data.data?.sessionId,
+        resumeAnalysis: response.data.data?.resumeAnalysis, // 添加简历分析结果
         message: response.data.message
       };
     } else {
@@ -300,15 +275,19 @@ export const getInterviewQuestion = async () => {
 /**
  * 提交面试回答
  * @param {Blob} videoFile - 录像视频文件
+ * @param {string} answer - 回答内容（语音转文字）
  * @returns {Promise} 提交结果
  */
-export const submitAnswer = async (videoFile) => {
+export const submitAnswer = async (videoFile, answer) => {
   try {
     const formData = new FormData();
     formData.append('videoFile', videoFile);
     
-    const response = await apiClient.post('/api/interviews/question', formData, {
-      // 不设置Content-Type，让浏览器自动设置multipart/form-data和boundary
+    // 根据API文档，answer作为query参数传递
+    const response = await apiClient.post(`/api/interviews/question?answer=${encodeURIComponent(answer)}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     
     if (response.data.code === 200) {
@@ -380,6 +359,30 @@ export const setApiBaseUrl = (url) => {
  */
 export const getCurrentApiBaseUrl = () => {
   return apiClient.defaults.baseURL;
+};
+
+/**
+ * 完成面试
+ * @param {string} position - 职位名称
+ * @returns {Promise} 完成结果
+ */
+export const completeInterview = async (position) => {
+  try {
+    const response = await apiClient.post(`/api/interviews/complete?position=${encodeURIComponent(position)}`);
+    
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        message: response.data.message,
+        data: response.data.data
+      };
+    } else {
+      throw new Error(response.data.message || '完成面试失败');
+    }
+  } catch (error) {
+    console.error('Complete interview error:', error);
+    throw new Error(error.response?.data?.message || '完成面试失败，请稍后重试');
+  }
 };
 
 // 导出axios实例供其他地方使用
