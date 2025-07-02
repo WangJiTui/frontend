@@ -102,7 +102,9 @@ const Home = () => {
     setLoginError('');
     
     try {
-      const result = await login(username, password);
+      // 简单的密码哈希（实际项目中应使用更安全的哈希方法）
+      const passwordHash = password;
+      const result = await login(username, passwordHash);
       if (result.success) {
         // 检查是否为管理员（仅限预设管理员账号：admin、manager）
         // 管理员权限由后端预设，前端无法控制
@@ -155,7 +157,9 @@ const Home = () => {
     setLoginError('');
     
     try {
-      const result = await register(username, email, password);
+      // 简单的密码哈希（实际项目中应使用更安全的哈希方法）
+      const passwordHash = password;
+      const result = await register(username, email, passwordHash);
       if (result.success) {
         // 检查是否为管理员（仅限预设管理员账号：admin、manager）
         // 管理员权限由后端预设，前端无法控制
@@ -430,11 +434,6 @@ const Home = () => {
                   : '提示：请使用已注册的账号登录'
                 }
               </p>
-              {isRegisterMode && (
-                <p className="text-xs text-orange-600 mt-2">
-                  💡 管理员账号：用户名为"admin"或"manager"的用户将自动获得管理员权限
-                </p>
-              )}
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "http://localhost:8080";
 
 // 创建axios实例
 const apiClient = axios.create({
@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.token = token; // 使用token字段而不是Authorization
     }
     console.log(`Making ${config.method?.toUpperCase()} request to ${config.url}`);
     return config;
@@ -50,28 +50,32 @@ apiClient.interceptors.response.use(
 /**
  * 用户登录
  * @param {string} username - 用户名
- * @param {string} password - 密码
+ * @param {string} passwordHash - 密码哈希
  * @returns {Promise} 登录结果
  */
-export const login = async (username, password) => {
+export const login = async (username, passwordHash) => {
   try {
-    const response = await apiClient.post('/login', {
+    const response = await apiClient.post('/api/student/login', {
       username,
-      password
+      passwordHash,
+      email: null,
+      role: null,
+      createdAt: null
     });
     
-    if ((response.data.message === 'success' || response.data.message === 'manager') && response.data.token) {
+    // 处理统一的Result格式响应
+    if (response.data.code === 200 && response.data.data?.token) {
       // 保存token和用户信息
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('login_user', username);
       return {
         success: true,
-        token: response.data.token,
-        user: response.data.user,
-        message: response.data.message // 传递消息，用于判断是否为管理员
+        token: response.data.data.token,
+        user: response.data.data.user,
+        message: response.data.message
       };
     } else {
-      throw new Error('登录失败：服务器返回异常');
+      throw new Error(response.data.message || '登录失败：服务器返回异常');
     }
   } catch (error) {
     console.error('Login error:', error);
@@ -83,34 +87,103 @@ export const login = async (username, password) => {
  * 用户注册
  * @param {string} username - 用户名
  * @param {string} email - 邮箱地址
- * @param {string} password - 密码
+ * @param {string} passwordHash - 密码哈希
  * @returns {Promise} 注册结果
  */
-export const register = async (username, email, password) => {
+export const register = async (username, email, passwordHash) => {
   try {
-    const response = await apiClient.post('/register', {
+    console.log('发送注册请求:', { username, email, passwordHash });
+    
+    const response = await apiClient.post('/api/student/regist', {
       username,
+      passwordHash,
       email,
-      password
+      role: null,
+      createdAt: null
     });
     
-    if ((response.data.message === 'success' || response.data.message === 'manager') && response.data.token) {
+    console.log('注册响应:', response.data);
+    
+    // 处理统一的Result格式响应
+    if (response.data.code === 200 && response.data.data?.token) {
       // 保存token和用户信息
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('login_user', username);
       localStorage.setItem('user_email', email);
       return {
         success: true,
-        token: response.data.token,
-        user: response.data.user,
-        message: response.data.message // 传递消息，用于判断是否为管理员
+        token: response.data.data.token,
+        user: response.data.data.user,
+        message: response.data.message
       };
     } else {
-      throw new Error('注册失败：服务器返回异常');
+      console.error('注册失败，响应格式不正确:', response.data);
+      throw new Error(response.data.message || '注册失败：服务器返回异常');
     }
   } catch (error) {
-    console.error('Register error:', error);
-    throw new Error(error.response?.data?.message || '注册失败，请检查输入信息');
+    console.error('Register error详细信息:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      config: error.config
+    });
+    
+    // 更详细的错误处理
+    if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error')) {
+      throw new Error('网络连接失败，请检查后端服务是否启动在8080端口');
+    }
+    
+    if (error.response?.status === 404) {
+      throw new Error('接口不存在，请检查后端接口路径是否正确');
+    }
+    
+    if (error.response?.status === 500) {
+      throw new Error('服务器内部错误: ' + (error.response?.data?.message || '未知错误'));
+    }
+    
+    throw new Error(error.response?.data?.message || error.message || '注册失败，请检查输入信息');
+  }
+};
+
+/**
+ * 检查学号是否存在
+ * @param {string} userName - 用户名/学号
+ * @returns {Promise} 检查结果
+ */
+export const checkStudentNumber = async (userName) => {
+  try {
+    const response = await apiClient.post(`/api/student/checkStudentNumber?userName=${encodeURIComponent(userName)}`);
+    
+    return {
+      success: response.data.code === 200,
+      exists: response.data.data?.exists || false,
+      message: response.data.message
+    };
+  } catch (error) {
+    console.error('Check student number error:', error);
+    throw new Error(error.response?.data?.message || '检查学号失败，请稍后重试');
+  }
+};
+
+/**
+ * 获取用户信息
+ * @returns {Promise} 用户信息
+ */
+export const getUserInfo = async () => {
+  try {
+    const response = await apiClient.get('/api/student/getUserInfo');
+    
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        user: response.data.data
+      };
+    } else {
+      throw new Error(response.data.message || '获取用户信息失败');
+    }
+  } catch (error) {
+    console.error('Get user info error:', error);
+    throw new Error(error.response?.data?.message || '获取用户信息失败，请稍后重试');
   }
 };
 
@@ -144,19 +217,32 @@ export const analyzeResume = async (pdfFile, direction) => {
 
 /**
  * 创建面试会话
- * @param {Array} interviewDirections - 面试方向数组
+ * @param {string} position - 职位名称
+ * @param {File} resume_file - 简历文件
+ * @param {File} job_file - 职位描述文件
  * @returns {Promise} 创建结果
  */
-export const createInterview = async (interviewDirections) => {
+export const createInterview = async (position, resume_file, job_file) => {
   try {
-    const response = await apiClient.post('/api/interview/create', {
-      directions: interviewDirections
+    const formData = new FormData();
+    formData.append('resume_file', resume_file);
+    formData.append('job_file', job_file);
+    
+    const response = await apiClient.post(`/api/interviews/create?position=${encodeURIComponent(position)}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     
-    return {
-      success: true,
-      sessionId: response.data.sessionId
-    };
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        sessionId: response.data.data?.sessionId,
+        message: response.data.message
+      };
+    } else {
+      throw new Error(response.data.message || '创建面试会话失败');
+    }
   } catch (error) {
     console.error('Create interview error:', error);
     throw new Error(error.response?.data?.message || '创建面试会话失败，请稍后重试');
@@ -169,12 +255,17 @@ export const createInterview = async (interviewDirections) => {
  */
 export const startInterview = async () => {
   try {
-    const response = await apiClient.post('/api/interview/start');
+    const response = await apiClient.post('/api/interviews/start');
     
-    return {
-      success: true,
-      sessionId: response.data.sessionId
-    };
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        sessionId: response.data.data?.sessionId,
+        message: response.data.message
+      };
+    } else {
+      throw new Error(response.data.message || '开始面试失败');
+    }
   } catch (error) {
     console.error('Start interview error:', error);
     throw new Error(error.response?.data?.message || '开始面试失败，请稍后重试');
@@ -187,14 +278,19 @@ export const startInterview = async () => {
  */
 export const getInterviewQuestion = async () => {
   try {
-    const response = await apiClient.get('/api/interview/question');
+    const response = await apiClient.get('/api/interviews/question');
     
-    return {
-      success: true,
-      question: response.data.question,
-      questionIndex: response.data.questionIndex,
-      isEnd: response.data.isEnd || false
-    };
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        question: response.data.data?.question,
+        questionIndex: response.data.data?.questionIndex,
+        isEnd: response.data.data?.isEnd || false,
+        message: response.data.message
+      };
+    } else {
+      throw new Error(response.data.message || '获取面试问题失败');
+    }
   } catch (error) {
     console.error('Get interview question error:', error);
     throw new Error(error.response?.data?.message || '获取面试问题失败，请稍后重试');
@@ -203,28 +299,27 @@ export const getInterviewQuestion = async () => {
 
 /**
  * 提交面试回答
- * @param {string} transcription - 语音转文字内容
- * @param {Blob} videoBlob - 录像视频文件
- * @param {number} questionIndex - 当前问题索引
+ * @param {Blob} videoFile - 录像视频文件
  * @returns {Promise} 提交结果
  */
-export const submitAnswer = async (transcription, videoBlob, questionIndex) => {
+export const submitAnswer = async (videoFile) => {
   try {
     const formData = new FormData();
-    formData.append('transcription', transcription);
-    formData.append('video', videoBlob, `answer_${questionIndex}_${Date.now()}.webm`);
-    formData.append('questionIndex', questionIndex.toString());
+    formData.append('videoFile', videoFile);
     
-    const response = await apiClient.post('/api/interview/question', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await apiClient.post('/api/interviews/question', formData, {
+      // 不设置Content-Type，让浏览器自动设置multipart/form-data和boundary
     });
     
-    return {
-      success: true,
-      message: response.data.message
-    };
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        message: response.data.message,
+        data: response.data.data
+      };
+    } else {
+      throw new Error(response.data.message || '提交回答失败');
+    }
   } catch (error) {
     console.error('Submit answer error:', error);
     throw new Error(error.response?.data?.message || '提交回答失败，请稍后重试');

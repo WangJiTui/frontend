@@ -99,7 +99,13 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
       setError('');
       
       // 第一步：创建面试会话
-      const createResult = await createInterview(selectedDirections);
+      // 注意：这里需要适配后端API，暂时使用默认值
+      // TODO: 需要与后端协调API设计，或者修改前端业务逻辑来收集这些参数
+      const position = selectedDirections?.join(',') || '前端开发'; // 将方向转换为职位
+      const resume_file = new File([''], 'default_resume.pdf', { type: 'application/pdf' }); // 默认简历文件
+      const job_file = new File([''], 'default_job.pdf', { type: 'application/pdf' }); // 默认职位描述文件
+      
+      const createResult = await createInterview(position, resume_file, job_file);
       if (!createResult.success) {
         throw new Error('创建面试会话失败');
       }
@@ -187,7 +193,8 @@ const DialogueInterview = ({ selectedDirections, onInterviewComplete }) => {
       setAnswers(prev => [...prev, newAnswer]);
 
       // 发送回答到后端
-      const submitResult = await submitAnswer(answer, videoBlob, currentQuestionIndex);
+      // 注意：后端API只接受videoFile参数，这里只传递视频文件
+      const submitResult = await submitAnswer(videoBlob || new Blob());
       
       if (submitResult.success) {
         // 获取下一个问题
