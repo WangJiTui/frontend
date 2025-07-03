@@ -31,6 +31,11 @@ const Interview = () => {
     [location.state?.resumeFile]
   );
   
+  const jobDescription = useMemo(() => 
+    location.state?.jobDescription || '', 
+    [location.state?.jobDescription]
+  );
+  
   const [isInterviewComplete, setIsInterviewComplete] = useState(false); // 面试是否完成
   const [interviewAnswers, setInterviewAnswers] = useState([]); // 面试回答记录
   const [interviewSummary, setInterviewSummary] = useState(null); // 面试总结信息
@@ -46,6 +51,13 @@ const Interview = () => {
    * 如果没有选择方向或上传简历，重定向到首页
    */
   useEffect(() => {
+    if (!jobDescription || !jobDescription.trim()) {
+      console.warn('No job description provided, redirecting to home');
+      alert('职位描述信息丢失，请重新输入职位描述');
+      navigate('/', { replace: true });
+      return;
+    }
+    
     if (!selectedDirections || selectedDirections.length === 0) {
       console.warn('No interview directions selected, redirecting to home');
       alert('面试方向信息丢失，请重新选择面试方向');
@@ -58,7 +70,7 @@ const Interview = () => {
       alert('简历文件信息丢失，请重新上传简历文件');
       navigate('/', { replace: true });
     }
-  }, [selectedDirections, resumeFile, navigate]);
+  }, [jobDescription, selectedDirections, resumeFile, navigate]);
 
   const checkServerStatus = async () => {
     try {
@@ -202,6 +214,7 @@ const Interview = () => {
               <DialogueInterview
                 selectedDirections={selectedDirections}
                 resumeFile={resumeFile}
+                jobDescription={jobDescription}
                 onInterviewComplete={handleInterviewComplete}
               />
             </div>

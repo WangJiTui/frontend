@@ -4,7 +4,7 @@ import RTASRTranscription from './RTASRTranscription';
 import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -36,160 +36,29 @@ const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete
   }, []);
 
   // 生成岗位描述文件
-  const generateJobDescriptionFile = useCallback((directions) => {
-    const directionMapping = {
-      "ai_engineer": {
-        title: "AI工程师",
-        description: `职位名称：AI工程师
-岗位职责：
-1. 负责AI算法研发与优化
-2. 开发机器学习和深度学习模型
-3. 处理大规模数据集，进行特征工程
-4. 与产品团队协作，将AI技术产品化
-5. 持续跟进AI领域前沿技术发展
-
-任职要求：
-1. 计算机、人工智能相关专业本科及以上学历
-2. 熟练掌握Python编程，了解TensorFlow/PyTorch等框架
-3. 具备扎实的数学基础，熟悉机器学习算法
-4. 有实际项目经验，能独立完成模型训练和部署
-5. 良好的团队协作和沟通能力
-
-薪资范围：20-40K`
-      },
-      "frontend_engineer": {
-        title: "前端工程师",
-        description: `职位名称：前端工程师
-岗位职责：
-1. 负责Web前端界面开发与维护
-2. 与UI/UX设计师协作，实现高质量用户界面
-3. 优化前端性能，提升用户体验
-4. 与后端工程师配合，完成数据交互
-5. 参与技术方案讨论，推动前端技术发展
-
-任职要求：
-1. 计算机相关专业本科及以上学历
-2. 熟练掌握HTML5、CSS3、JavaScript等前端技术
-3. 熟悉React、Vue等主流前端框架
-4. 了解前端工程化工具，如Webpack、Vite等
-5. 具备良好的代码规范和团队协作能力
-
-薪资范围：15-30K`
-      },
-      "backend_engineer": {
-        title: "后端工程师",
-        description: `职位名称：后端工程师
-岗位职责：
-1. 负责服务端应用开发与维护
-2. 设计和实现RESTful API接口
-3. 数据库设计与优化
-4. 系统架构设计与性能调优
-5. 参与技术选型和代码审查
-
-任职要求：
-1. 计算机相关专业本科及以上学历
-2. 熟练掌握Java、Python或Go等后端语言
-3. 熟悉Spring Boot、Django等开发框架
-4. 了解MySQL、Redis等数据存储技术
-5. 具备良好的系统设计和问题解决能力
-
-薪资范围：18-35K`
-      },
-      "data_engineer": {
-        title: "数据工程师",
-        description: `职位名称：数据工程师
-岗位职责：
-1. 构建和维护数据处理流水线
-2. 设计数据仓库和数据湖架构
-3. 开发ETL/ELT数据处理任务
-4. 监控数据质量，确保数据准确性
-5. 与数据科学家和分析师协作
-
-任职要求：
-1. 计算机、统计学相关专业本科及以上学历
-2. 熟练掌握SQL，了解大数据处理技术
-3. 熟悉Hadoop、Spark、Kafka等大数据工具
-4. 了解云平台数据服务，如AWS、阿里云等
-5. 具备良好的数据敏感度和解决问题能力
-
-薪资范围：20-40K`
-      },
-      "devops_engineer": {
-        title: "DevOps工程师",
-        description: `职位名称：DevOps工程师
-岗位职责：
-1. 构建和维护CI/CD流水线
-2. 管理云基础设施和容器化部署
-3. 监控系统性能，处理运维告警
-4. 自动化运维流程，提升部署效率
-5. 与开发团队协作，推进DevOps文化
-
-任职要求：
-1. 计算机相关专业本科及以上学历
-2. 熟练掌握Linux系统管理
-3. 了解Docker、Kubernetes等容器技术
-4. 熟悉Jenkins、GitLab CI等CI/CD工具
-5. 具备云平台使用经验，良好的自动化思维
-
-薪资范围：18-35K`
-      },
-      "product_manager": {
-        title: "产品经理",
-        description: `职位名称：产品经理
-岗位职责：
-1. 负责产品规划和需求分析
-2. 设计产品功能和用户体验流程
-3. 协调技术、设计、运营等团队资源
-4. 分析用户反馈，持续优化产品
-5. 制定产品发展策略和版本规划
-
-任职要求：
-1. 本科及以上学历，理工科背景优先
-2. 具备产品思维和用户洞察能力
-3. 熟悉产品设计流程和项目管理
-4. 良好的沟通协调和跨团队协作能力
-5. 有互联网产品经验者优先
-
-薪资范围：20-40K`
-      },
-      "qa_engineer": {
-        title: "测试工程师",
-        description: `职位名称：测试工程师
-岗位职责：
-1. 负责软件产品的质量保证
-2. 设计和执行测试用例
-3. 开发自动化测试脚本
-4. 性能测试和安全测试
-5. 缺陷跟踪和质量报告
-
-任职要求：
-1. 计算机相关专业本科及以上学历
-2. 熟悉软件测试理论和方法
-3. 掌握自动化测试工具，如Selenium等
-4. 了解性能测试工具，如JMeter等
-5. 具备良好的逻辑思维和细致耐心
-
-薪资范围：15-30K`
-      }
-    };
-
-    // 选择第一个方向作为主要岗位，或组合多个方向
-    const primaryDirection = directions[0];
-    const jobInfo = directionMapping[primaryDirection] || {
-      title: "通用技术岗位",
-      description: "通用技术岗位职责和要求"
-    };
-
-    // 如果有多个方向，生成复合岗位描述
-    if (directions.length > 1) {
-      const titles = directions.map(dir => directionMapping[dir]?.title || dir).join("/");
-      const description = `复合岗位：${titles}\n\n结合了以下领域的技能要求：\n${directions.map(dir => `- ${directionMapping[dir]?.title || dir}`).join('\n')}`;
-      
-      return new File([description], 'job_description.txt', { type: 'text/plain' });
+  const generateJobDescriptionFile = useCallback(() => {
+    // 如果用户输入了职位描述，直接使用用户输入的内容
+    if (jobDescription && jobDescription.trim()) {
+      return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
     }
 
-    return new File([jobInfo.description], 'job_description.txt', { type: 'text/plain' });
-  }, []);
+    // 如果没有用户输入，使用默认的岗位描述模板（保留原逻辑作为后备）
+    const directionMapping = {
+      "ai_engineer": "AI工程师职位要求",
+      "frontend_engineer": "前端工程师职位要求", 
+      "backend_engineer": "后端工程师职位要求",
+      "data_engineer": "数据工程师职位要求",
+      "devops_engineer": "DevOps工程师职位要求",
+      "product_manager": "产品经理职位要求",
+      "qa_engineer": "测试工程师职位要求"
+    };
+
+    const description = selectedDirections?.length > 0 
+      ? `职位要求：${selectedDirections.map(dir => directionMapping[dir] || dir).join("、")}`
+      : "通用技术岗位职位要求";
+
+    return new File([description], 'job_description.txt', { type: 'text/plain' });
+  }, [jobDescription, selectedDirections]);
 
   // 开始录音录像的通用函数
   const startRecording = useCallback(async (delay = 1000) => {
@@ -257,7 +126,11 @@ const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete
       setError('');
       
       // 第一步：创建面试会话
-      // 检查必要的文件是否存在
+      // 检查必要的文件和信息是否存在
+      if (!jobDescription || !jobDescription.trim()) {
+        throw new Error('职位描述信息缺失，请返回首页输入职位描述');
+      }
+      
       if (!resumeFile) {
         throw new Error('简历文件未上传，请返回首页上传简历文件');
       }
@@ -267,7 +140,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete
       
       // 使用真实的简历文件和生成的岗位描述文件
       const resume_file = resumeFile; // 用户上传的PDF简历文件
-      const job_file = generateJobDescriptionFile(selectedDirections); // 根据选择的方向生成岗位描述TXT文件
+      const job_file = generateJobDescriptionFile(); // 使用用户输入的职位描述生成TXT文件
       
       const createResult = await createInterview(currentPosition, resume_file, job_file);
       if (!createResult.success) {
@@ -313,7 +186,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, onInterviewComplete
       console.error('开始面试失败:', error);
       setError(error.message);
     }
-  }, [selectedDirections, resumeFile, generateJobDescriptionFile, startRecording]);
+  }, [selectedDirections, resumeFile, jobDescription, generateJobDescriptionFile, startRecording]);
 
   // 发送回答并获取下一个问题或结束面试
   const handleSubmitAnswer = useCallback(async (answer) => {
