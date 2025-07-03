@@ -146,7 +146,7 @@ const Interview = () => {
     };
 
     initializeInterview();
-  }, [jobDescription, selectedDirections, resumeFile, generateJobDescriptionFile, interviewStatus]);
+  }, [jobDescription, selectedDirections, resumeFile, generateJobDescriptionFile]);
 
   const checkServerStatus = async () => {
     try {
