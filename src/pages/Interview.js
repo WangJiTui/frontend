@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import DialogueInterview from "../components/DialogueInterview";
-import { getServerStatus } from "../services/api";
+import { getServerStatus, createInterview, startInterview, getInterviewQuestion } from "../services/api";
 
 /**
  * Interview组件 - 面试主页面
@@ -40,11 +40,30 @@ const Interview = () => {
   const [interviewAnswers, setInterviewAnswers] = useState([]); // 面试回答记录
   const [interviewSummary, setInterviewSummary] = useState(null); // 面试总结信息
   const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null); // 简历分析结果
+  
+  // 新增状态管理面试初始化流程
+  const [interviewStatus, setInterviewStatus] = useState('loading'); // 'loading' | 'creating' | 'starting' | 'ready' | 'error'
+  const [sessionId, setSessionId] = useState('');
+  const [position, setPosition] = useState('');
+  const [initError, setInitError] = useState('');
 
   // 检查服务器状态
   useEffect(() => {
     checkServerStatus();
   }, []);
+
+  // 生成岗位描述文件
+  const generateJobDescriptionFile = useMemo(() => {
+    if (jobDescription && jobDescription.trim()) {
+      return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
+    }
+    
+    const description = selectedDirections?.length > 0 
+      ? `职位要求：${selectedDirections.join("、")}`
+      : "通用技术岗位职位要求";
+    
+    return new File([description], 'job_description.txt', { type: 'text/plain' });
+  }, [jobDescription, selectedDirections]);
 
   /**
    * 验证面试方向和简历文件是否有效
@@ -71,6 +90,63 @@ const Interview = () => {
       navigate('/', { replace: true });
     }
   }, [jobDescription, selectedDirections, resumeFile, navigate]);
+
+  // 自动开始面试流程
+  useEffect(() => {
+    // 只有在验证通过且状态为loading时才开始面试
+    if (interviewStatus !== 'loading' || !jobDescription?.trim() || !selectedDirections?.length || !resumeFile) {
+      return;
+    }
+
+    const initializeInterview = async () => {
+      try {
+        // 第一步：创建面试会话
+        setInterviewStatus('creating');
+        setInitError('');
+        
+        const currentPosition = selectedDirections.join(',');
+        setPosition(currentPosition);
+        
+        console.log('开始创建面试会话...');
+        const createResult = await createInterview(currentPosition, resumeFile, generateJobDescriptionFile);
+        
+        if (!createResult.success) {
+          throw new Error('创建面试会话失败');
+        }
+        
+        setSessionId(createResult.sessionId);
+        setResumeAnalysisResult(createResult.resumeAnalysis);
+        
+        // 第二步：开始面试
+        setInterviewStatus('starting');
+        console.log('开始面试...');
+        const startResult = await startInterview();
+        
+        if (!startResult.success) {
+          throw new Error('开始面试失败');
+        }
+        
+        // 第三步：获取第一个问题
+        console.log('获取第一个问题...');
+        const questionResult = await getInterviewQuestion();
+        
+        if (!questionResult.success) {
+          throw new Error('获取第一个问题失败');
+        }
+        
+        // 面试初始化完成
+        setInterviewStatus('ready');
+        console.log('面试初始化完成');
+        
+      } catch (error) {
+        console.error('面试初始化失败:', error);
+        setInitError(error.message);
+        setInterviewStatus('error');
+      }
+    };
+
+    initializeInterview();
+  }, [jobDescription, selectedDirections, resumeFile, generateJobDescriptionFile, interviewStatus]);
 
   const checkServerStatus = async () => {
     try {
@@ -159,13 +235,67 @@ const Interview = () => {
     navigate('/');
   };
 
-  // 如果没有选择面试方向，显示加载状态
-  if (!selectedDirections || selectedDirections.length === 0) {
+  // 根据面试状态显示不同的加载界面
+  if (interviewStatus === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">正在加载面试...</p>
+          <p className="text-gray-600">正在验证面试信息...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (interviewStatus === 'creating') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">正在创建面试会话...</p>
+          <p className="text-sm text-gray-500 mt-2">分析简历和职位要求中</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (interviewStatus === 'starting') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">正在开始面试...</p>
+          <p className="text-sm text-gray-500 mt-2">准备面试问题中</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (interviewStatus === 'error') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-red-600 mb-4">
+            <svg className="h-16 w-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">面试初始化失败</h2>
+            <p className="text-gray-600 mb-4">{initError}</p>
+          </div>
+          <div className="space-y-3">
+            <Button
+              onClick={() => window.location.reload()}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+            >
+              重新尝试
+            </Button>
+            <Button
+              onClick={handleBackToHome}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+            >
+              返回首页
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -215,6 +345,10 @@ const Interview = () => {
                 selectedDirections={selectedDirections}
                 resumeFile={resumeFile}
                 jobDescription={jobDescription}
+                sessionId={sessionId}
+                position={position}
+                resumeAnalysisResult={resumeAnalysisResult}
+                autoStart={true}
                 onInterviewComplete={handleInterviewComplete}
               />
             </div>

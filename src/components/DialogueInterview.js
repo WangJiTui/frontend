@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { createInterview, startInterview, getInterviewQuestion, submitAnswer, getInterviewSummary, completeInterview } from '../services/api';
+import { getInterviewQuestion, submitAnswer, getInterviewSummary, completeInterview } from '../services/api';
 import RTASRTranscription from './RTASRTranscription';
 import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, resumeAnalysisResult, autoStart, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -15,11 +15,8 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onI
   const [error, setError] = useState('');
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [submissionState, setSubmissionState] = useState('idle'); // 'idle' | 'submitting' | 'submitted'
-  const [isInterviewStarted, setIsInterviewStarted] = useState(false);
+  const [isInterviewStarted, setIsInterviewStarted] = useState(autoStart || false);
   const [isInterviewEnded, setIsInterviewEnded] = useState(false);
-  const [sessionId, setSessionId] = useState('');
-  const [position, setPosition] = useState(''); // 存储职位信息
-  const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null); // 存储简历分析结果
   
   const rtasrRef = useRef(null);
   const videoRecorderRef = useRef(new VideoRecorder());
@@ -35,30 +32,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onI
     };
   }, []);
 
-  // 生成岗位描述文件
-  const generateJobDescriptionFile = useCallback(() => {
-    // 如果用户输入了职位描述，直接使用用户输入的内容
-    if (jobDescription && jobDescription.trim()) {
-      return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
-    }
 
-    // 如果没有用户输入，使用默认的岗位描述模板（保留原逻辑作为后备）
-    const directionMapping = {
-      "ai_engineer": "AI工程师职位要求",
-      "frontend_engineer": "前端工程师职位要求", 
-      "backend_engineer": "后端工程师职位要求",
-      "data_engineer": "数据工程师职位要求",
-      "devops_engineer": "DevOps工程师职位要求",
-      "product_manager": "产品经理职位要求",
-      "qa_engineer": "测试工程师职位要求"
-    };
-
-    const description = selectedDirections?.length > 0 
-      ? `职位要求：${selectedDirections.map(dir => directionMapping[dir] || dir).join("、")}`
-      : "通用技术岗位职位要求";
-
-    return new File([description], 'job_description.txt', { type: 'text/plain' });
-  }, [jobDescription, selectedDirections]);
 
   // 开始录音录像的通用函数
   const startRecording = useCallback(async (delay = 1000) => {
@@ -119,74 +93,44 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onI
 
 
 
-  // 开始面试 - 调用后端API创建面试会话并获取第一个问题
-  const handleStartInterview = useCallback(async () => {
-    try {
-      setFeedback('正在创建面试会话...');
-      setError('');
-      
-      // 第一步：创建面试会话
-      // 检查必要的文件和信息是否存在
-      if (!jobDescription || !jobDescription.trim()) {
-        throw new Error('职位描述信息缺失，请返回首页输入职位描述');
-      }
-      
-      if (!resumeFile) {
-        throw new Error('简历文件未上传，请返回首页上传简历文件');
-      }
-      
-      const currentPosition = selectedDirections?.join(',') || '前端开发'; // 将方向转换为职位
-      setPosition(currentPosition); // 保存职位信息到状态
-      
-      // 使用真实的简历文件和生成的岗位描述文件
-      const resume_file = resumeFile; // 用户上传的PDF简历文件
-      const job_file = generateJobDescriptionFile(); // 使用用户输入的职位描述生成TXT文件
-      
-      const createResult = await createInterview(currentPosition, resume_file, job_file);
-      if (!createResult.success) {
-        throw new Error('创建面试会话失败');
-      }
-      
-      setSessionId(createResult.sessionId);
-      setResumeAnalysisResult(createResult.resumeAnalysis); // 保存简历分析结果
-      setFeedback('正在开始面试...');
-      
-      // 第二步：开始面试
-      const startResult = await startInterview();
-      if (!startResult.success) {
-        throw new Error('开始面试失败');
-      }
-      
-      setFeedback('正在获取第一个问题...');
-      
-      // 第三步：获取第一个问题
-      const questionResult = await getInterviewQuestion();
-      if (questionResult.success) {
-        setCurrentQuestion(questionResult.question);
-        setCurrentQuestionIndex(questionResult.questionIndex);
-        setIsInterviewStarted(true);
+  // 获取第一个问题并开始录音（面试已在父组件初始化完成）
+  useEffect(() => {
+    if (!autoStart || !sessionId) return;
+    
+    const initializeFirstQuestion = async () => {
+      try {
+        setFeedback('正在获取第一个问题...');
+        setError('');
         
-        // 开始录音录像
-        try {
-          const startSuccess = await startRecording(1500);
-          if (startSuccess) {
-            setIsWaitingForAnswer(true);
-            setFeedback('');
-          } else {
-            setError('录音启动失败，请手动输入回答并点击提交按钮');
+        const questionResult = await getInterviewQuestion();
+        if (questionResult.success) {
+          setCurrentQuestion(questionResult.question);
+          setCurrentQuestionIndex(questionResult.questionIndex);
+          
+          // 开始录音录像
+          try {
+            const startSuccess = await startRecording(1500);
+            if (startSuccess) {
+              setIsWaitingForAnswer(true);
+              setFeedback('');
+            } else {
+              setError('录音启动失败，请手动输入回答并点击提交按钮');
+              setIsWaitingForAnswer(false);
+            }
+          } catch (startError) {
+            console.error('启动录音失败:', startError);
+            setError(`录音启动失败: ${startError.message}`);
             setIsWaitingForAnswer(false);
           }
-        } catch (startError) {
-          console.error('启动录音失败:', startError);
-          setError(`录音启动失败: ${startError.message}`);
-          setIsWaitingForAnswer(false);
         }
+      } catch (error) {
+        console.error('获取第一个问题失败:', error);
+        setError(error.message);
       }
-    } catch (error) {
-      console.error('开始面试失败:', error);
-      setError(error.message);
-    }
-  }, [selectedDirections, resumeFile, jobDescription, generateJobDescriptionFile, startRecording]);
+    };
+
+    initializeFirstQuestion();
+  }, [autoStart, sessionId, startRecording]);
 
   // 发送回答并获取下一个问题或结束面试
   const handleSubmitAnswer = useCallback(async (answer) => {
@@ -408,21 +352,14 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onI
     }
   };
 
-  // 初始化面试
+  // 清理定时器的effect  
   useEffect(() => {
-    if (selectedDirections && selectedDirections.length > 0 && !isInterviewStarted) {
-      console.log('DialogueInterview组件初始化，selectedDirections:', selectedDirections);
-      
-      // 清除任何可能存在的自动提交计时器
-      if (autoSubmitTimeoutRef.current) {
-        clearTimeout(autoSubmitTimeoutRef.current);
-        autoSubmitTimeoutRef.current = null;
-      }
-      
-      // 自动开始面试
-      handleStartInterview();
+    // 清除任何可能存在的自动提交计时器
+    if (autoSubmitTimeoutRef.current) {
+      clearTimeout(autoSubmitTimeoutRef.current);
+      autoSubmitTimeoutRef.current = null;
     }
-  }, [selectedDirections, isInterviewStarted, handleStartInterview]);
+  }, []);
 
   // 组件卸载时清理资源
   useEffect(() => {
@@ -444,10 +381,10 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, onI
 
   return (
     <div className="space-y-6">
-      {!isInterviewStarted && (
+      {(!isInterviewStarted || !currentQuestion) && !isInterviewEnded && (
         <div className="text-center p-8">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">正在准备面试...</p>
+          <p className="text-gray-600">{feedback || '正在准备第一个问题...'}</p>
         </div>
       )}
 
