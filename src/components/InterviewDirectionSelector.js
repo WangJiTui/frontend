@@ -1,21 +1,4 @@
-/**
- * 面试方向选择器组件
- * 允许用户选择多个面试方向
- */
-
-/**
- * InterviewDirectionSelector组件 - 面试方向选择器
- * 功能：
- * - 显示所有可选的面试方向
- * - 支持多选
- * - 提供视觉反馈
- * 
- * @param {Object} props - 组件属性
- * @param {Array} props.selectedDirections - 当前选中的面试方向数组
- * @param {Function} props.onDirectionChange - 方向选择变化回调函数
- */
 const InterviewDirectionSelector = ({ selectedDirections, onDirectionChange }) => {
-  // 所有可选的面试方向配置
   const interviewDirections = [
     { id: "ai_engineer", name: "AI工程师", description: "机器学习、深度学习、自然语言处理、计算机视觉等" },
     { id: "data_engineer", name: "数据工程师", description: "数据管道、数据建模、数据治理、大数据处理等" },
@@ -26,10 +9,6 @@ const InterviewDirectionSelector = ({ selectedDirections, onDirectionChange }) =
     { id: "qa_engineer", name: "测试工程师", description: "功能测试、自动化测试、性能测试、质量保证等" }
   ];
 
-  /**
-   * 处理方向选择变化
-   * @param {string} directionId - 面试方向ID
-   */
   const handleDirectionToggle = (directionId) => {
     const newSelectedDirections = selectedDirections.includes(directionId)
       ? selectedDirections.filter(id => id !== directionId)

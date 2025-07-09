@@ -1,26 +1,13 @@
-/**
- * 面试页面组件
- * 负责管理整个面试流程，包括问题展示和回答收集
- */
-
 import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import DialogueInterview from "../components/DialogueInterview";
 import { createInterview, startInterview, getInterviewQuestion } from "../services/api";
 
-/**
- * Interview组件 - 面试主页面
- * 功能：
- * - 接收从首页传递的面试方向
- * - 管理面试状态（进行中/已完成）
- * - 处理面试完成后的导航
- */
 const Interview = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 从路由状态中获取选中的面试方向和简历文件，使用useMemo避免重复创建
   const selectedDirections = useMemo(() => 
     location.state?.selectedDirections || [], 
     [location.state?.selectedDirections]
@@ -36,20 +23,16 @@ const Interview = () => {
     [location.state?.jobDescription]
   );
   
-  const [isInterviewComplete, setIsInterviewComplete] = useState(false); // 面试是否完成
-  const [interviewAnswers, setInterviewAnswers] = useState([]); // 面试回答记录
-  const [interviewSummary, setInterviewSummary] = useState(null); // 面试总结信息
-  const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null); // 简历分析结果
+  const [isInterviewComplete, setIsInterviewComplete] = useState(false);
+  const [interviewAnswers, setInterviewAnswers] = useState([]);
+  const [interviewSummary, setInterviewSummary] = useState(null);
+  const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null);
   
-  // 新增状态管理面试初始化流程
-  const [interviewStatus, setInterviewStatus] = useState('loading'); // 'loading' | 'creating' | 'starting' | 'ready' | 'error'
+  const [interviewStatus, setInterviewStatus] = useState('loading');
   const [sessionId, setSessionId] = useState('');
   const [position, setPosition] = useState('');
   const [initError, setInitError] = useState('');
 
-
-
-  // 生成岗位描述文件
   const generateJobDescriptionFile = useMemo(() => {
     if (jobDescription && jobDescription.trim()) {
       return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
@@ -62,10 +45,6 @@ const Interview = () => {
     return new File([description], 'job_description.txt', { type: 'text/plain' });
   }, [jobDescription, selectedDirections]);
 
-  /**
-   * 验证面试方向和简历文件是否有效
-   * 如果没有选择方向或上传简历，重定向到首页
-   */
   useEffect(() => {
     if (!jobDescription || !jobDescription.trim()) {
       console.warn('No job description provided, redirecting to home');
@@ -88,23 +67,19 @@ const Interview = () => {
     }
   }, [jobDescription, selectedDirections, resumeFile, navigate]);
 
-  // 自动开始面试流程
   useEffect(() => {
-    // 只有在验证通过且状态为loading时才开始面试
     if (interviewStatus !== 'loading' || !jobDescription?.trim() || !selectedDirections?.length || !resumeFile) {
       return;
     }
 
     const initializeInterview = async () => {
       try {
-        // 第一步：创建面试会话
         setInterviewStatus('creating');
         setInitError('');
         
         const currentPosition = selectedDirections.join(',');
         setPosition(currentPosition);
         
-        // 在useEffect内部生成JobDescriptionFile，避免依赖项变化
         const jobDescFile = (() => {
           let content = '';
           if (jobDescription && jobDescription.trim()) {
@@ -115,7 +90,6 @@ const Interview = () => {
               : "通用技术岗位职位要求";
           }
           
-          // 方法1: 直接转换 (String → File)
           const file = new File([content], 'job_description.txt', { 
             type: 'text/plain',
             lastModified: Date.now()
@@ -123,6 +97,27 @@ const Interview = () => {
           
           return file;
         })();
+        
+        console.log('=== 职位描述文件创建验证 ===');
+        console.log('jobDescFile 是否为 File 实例:', jobDescFile instanceof File);
+        console.log('jobDescFile 是否为 Blob 实例:', jobDescFile instanceof Blob);
+        console.log('jobDescFile 详细信息:', {
+          name: jobDescFile.name,
+          size: jobDescFile.size,
+          type: jobDescFile.type,
+          lastModified: jobDescFile.lastModified,
+          constructor: jobDescFile.constructor.name
+        });
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          console.log('文件内容读取结果:', {
+            contentLength: e.target.result.length,
+            contentPreview: e.target.result.substring(0, 100) + (e.target.result.length > 100 ? '...' : '')
+          });
+        };
+        reader.readAsText(jobDescFile);
+        console.log('=== 文件验证结束 ===');
         
         console.log('开始创建面试会话...');
         const createResult = await createInterview(currentPosition, resumeFile, jobDescFile);
@@ -134,7 +129,6 @@ const Interview = () => {
         setSessionId(createResult.sessionId);
         setResumeAnalysisResult(createResult.resumeAnalysis);
         
-        // 第二步：开始面试
         setInterviewStatus('starting');
         console.log('开始面试...');
         const startResult = await startInterview();
@@ -143,7 +137,6 @@ const Interview = () => {
           throw new Error('开始面试失败');
         }
                 
-        // 面试初始化完成
         setInterviewStatus('ready');
         console.log('面试初始化完成，第一个问题将由DialogueInterview组件获取');
         
@@ -155,24 +148,14 @@ const Interview = () => {
     };
 
     initializeInterview();
-  }, [jobDescription, selectedDirections, resumeFile]); // 移除generateJobDescriptionFile依赖项
+  }, [jobDescription, selectedDirections, resumeFile]);
 
-
-
-  /**
-   * 处理面试完成
-   * 保存面试答案、总结信息、简历分析结果并设置完成状态
-   * @param {Array} answers - 面试回答数组
-   * @param {Object} summary - 面试总结信息（可选）
-   * @param {Object} resumeAnalysis - 简历分析结果（可选）
-   */
   const handleInterviewComplete = (answers, summary, resumeAnalysis) => {
     setInterviewAnswers(answers);
     setInterviewSummary(summary);
     setResumeAnalysisResult(resumeAnalysis);
     setIsInterviewComplete(true);
     
-    // 自动跳转到总结页面
     setTimeout(() => {
       navigate('/summary', { 
         state: { 
@@ -182,14 +165,9 @@ const Interview = () => {
           resumeAnalysis: resumeAnalysis
         } 
       });
-    }, 2000); // 显示完成提示2秒后自动跳转
+    }, 2000);
   };
 
-  /**
-   * 将面试方向英文代码转换为中文名称
-   * @param {Array} directions - 面试方向代码数组
-   * @returns {string} 中文名称字符串
-   */
   const getDirectionNames = (directions) => {
     const directionMapping = {
       "ai_engineer": "AI工程师",
@@ -204,10 +182,6 @@ const Interview = () => {
     return directions?.map(id => directionMapping[id] || id).join("、") || "通用面试";
   };
 
-  /**
-   * 查看面试总结
-   * 导航到总结页面并传递面试数据
-   */
   const handleViewSummary = () => {
     navigate('/summary', { 
       state: { 
@@ -219,10 +193,6 @@ const Interview = () => {
     });
   };
 
-  /**
-   * 重新开始面试
-   * 重置状态并重新开始
-   */
   const handleRestartInterview = () => {
     setIsInterviewComplete(false);
     setInterviewAnswers([]);
@@ -230,14 +200,10 @@ const Interview = () => {
     setResumeAnalysisResult(null);
   };
 
-  /**
-   * 返回首页
-   */
   const handleBackToHome = () => {
     navigate('/');
   };
 
-  // 根据面试状态显示不同的加载界面
   if (interviewStatus === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -305,11 +271,9 @@ const Interview = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* 页面头部 */}
       <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* 面试信息 */}
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +288,6 @@ const Interview = () => {
               </div>
             </div>
 
-            {/* 操作按钮 */}
             <div className="flex space-x-3">
               <Button
                 onClick={handleBackToHome}
@@ -337,10 +300,8 @@ const Interview = () => {
         </div>
       </div>
 
-      {/* 主要内容区域 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {!isInterviewComplete ? (
-          /* 面试进行中 */
           <div className="space-y-6">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20">
               <DialogueInterview
@@ -356,7 +317,6 @@ const Interview = () => {
             </div>
           </div>
         ) : (
-          /* 面试已完成 */
           <div className="space-y-6">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
               <div className="text-green-600 mb-6">
@@ -368,7 +328,6 @@ const Interview = () => {
                 <p className="text-sm text-gray-500">正在生成分析报告，2秒后自动跳转...</p>
               </div>
 
-              {/* 操作按钮 */}
               <div className="flex justify-center space-x-4">
                 <Button
                   onClick={handleViewSummary}

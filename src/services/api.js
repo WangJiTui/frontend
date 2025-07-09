@@ -235,11 +235,17 @@ export const createInterview = async (position, resume_file, job_file) => {
       },
     });
     
+    console.log('createInterview响应:', response.data);
+    console.log('create data类型:', typeof response.data.data);
+    console.log('create data内容:', response.data.data);
+    
     if (response.data.code === 200) {
+      const data = response.data.data;
+      
       return {
         success: true,
-        sessionId: response.data.data?.sessionId,
-        resumeAnalysis: response.data.data?.resumeAnalysis, // 添加简历分析结果
+        sessionId: data?.sessionId || null,
+        resumeAnalysis: data?.resumeAnalysis || data, // 如果data直接是简历分析结果
         message: response.data.message
       };
     } else {
@@ -259,10 +265,12 @@ export const startInterview = async () => {
   try {
     const response = await apiClient.post('/api/interviews/start');
     
+    console.log('startInterview响应:', response.data);
+    
     if (response.data.code === 200) {
       return {
         success: true,
-        sessionId: response.data.data?.sessionId,
+        firstQuestion: response.data.data, // 后端返回的是第一个问题字符串
         message: response.data.message
       };
     } else {
@@ -282,12 +290,31 @@ export const getInterviewQuestion = async () => {
   try {
     const response = await apiClient.get('/api/interviews/question');
     
+    console.log('getInterviewQuestion响应:', response.data);
+    console.log('data类型:', typeof response.data.data);
+    console.log('data内容:', response.data.data);
+    
     if (response.data.code === 200) {
+      // 根据后端实际返回的数据格式调整处理逻辑
+      const data = response.data.data;
+      
+      // 如果data是字符串，则直接作为问题内容
+      if (typeof data === 'string') {
+        return {
+          success: true,
+          question: data,
+          questionIndex: null,
+          isEnd: false,
+          message: response.data.message
+        };
+      }
+      
+      // 如果data是对象，按原来的逻辑处理
       return {
         success: true,
-        question: response.data.data?.question,
-        questionIndex: response.data.data?.questionIndex,
-        isEnd: response.data.data?.isEnd || false,
+        question: data?.question,
+        questionIndex: data?.questionIndex,
+        isEnd: data?.isEnd || false,
         message: response.data.message
       };
     } else {
@@ -316,6 +343,10 @@ export const submitAnswer = async (videoFile, answer) => {
         'Content-Type': 'multipart/form-data',
       },
     });
+    
+    console.log('submitAnswer响应:', response.data);
+    console.log('submit data类型:', typeof response.data.data);
+    console.log('submit data内容:', response.data.data);
     
     if (response.data.code === 200) {
       return {
@@ -378,6 +409,10 @@ export const getCurrentApiBaseUrl = () => {
 export const completeInterview = async (position) => {
   try {
     const response = await apiClient.post(`/api/interviews/complete?position=${encodeURIComponent(position)}`);
+    
+    console.log('completeInterview响应:', response.data);
+    console.log('complete data类型:', typeof response.data.data);
+    console.log('complete data内容:', response.data.data);
     
     if (response.data.code === 200) {
       return {
