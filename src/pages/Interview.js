@@ -115,9 +115,8 @@ const Interview = () => {
               : "通用技术岗位职位要求";
           }
           
-          // 先创建Blob，再转换为File，确保正确的文件格式
-          const blob = new Blob([content], { type: 'text/plain' });
-          const file = new File([blob], 'job_description.txt', { 
+          // 方法1: 直接转换 (String → File)
+          const file = new File([content], 'job_description.txt', { 
             type: 'text/plain',
             lastModified: Date.now()
           });
