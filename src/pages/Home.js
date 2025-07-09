@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Button from "../components/Button";
 import InterviewDirectionSelector from "../components/InterviewDirectionSelector";
-import { getServerStatus, login, register } from "../services/api";
+import { login, register } from "../services/api";
 import ApiConfigModal from "../components/ApiConfigModal";
 
 /**
@@ -21,7 +21,7 @@ import ApiConfigModal from "../components/ApiConfigModal";
 const Home = () => {
   const navigate = useNavigate();
   const [selectedDirections, setSelectedDirections] = useState([]); // 选中的面试方向
-  const [serverStatus, setServerStatus] = useState(null); // 服务器连接状态
+
   // 检查用户是否已登录 - 验证token和用户信息
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem('token');
@@ -47,23 +47,7 @@ const Home = () => {
    * 检查服务器连接状态
    * 在组件挂载时自动执行
    */
-  useEffect(() => {
-    checkServerStatus();
-  }, []);
 
-  /**
-   * 检查后端服务器状态
-   * 用于确定是否使用模拟模式
-   */
-  const checkServerStatus = async () => {
-    try {
-      const status = await getServerStatus();
-      setServerStatus(status);
-    } catch (error) {
-      console.error("Server status check failed:", error);
-      setServerStatus(null);
-    }
-  };
 
   /**
    * 处理面试方向选择变化
@@ -491,68 +475,7 @@ const Home = () => {
           <p className="text-xl text-gray-600">选择面试方向，开始你的模拟面试体验</p>
         </div>
 
-        {/* 服务器状态指示器 */}
-        {serverStatus === null ? (
-            // 加载状态
-            <div className="mb-8 p-4 bg-gray-100/80 backdrop-blur-sm border border-gray-300 rounded-2xl max-w-md mx-auto shadow-lg">
-              <div className="flex items-center justify-center">
-                <svg
-                    className="animate-spin w-5 h-5 text-gray-600 mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span className="text-gray-800 font-medium">检查服务器状态中...</span>
-              </div>
-            </div>
-        ) : serverStatus?.online ? (
-            // 在线状态
-            <div className="mb-8 p-4 bg-green-100/80 backdrop-blur-sm border border-green-300 rounded-2xl max-w-md mx-auto shadow-lg">
-              <div className="flex items-center justify-center">
-                <svg
-                    className="w-5 h-5 text-green-600 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                  <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span className="text-green-800 font-medium">✓ 服务器连接正常</span>
-              </div>
-            </div>
-        ) : (
-            // 离线状态
-            <div className="mb-8 p-4 bg-red-100/80 backdrop-blur-sm border border-red-300 rounded-2xl max-w-md mx-auto shadow-lg">
-              <div className="flex items-center justify-center">
-                <svg
-                    className="w-5 h-5 text-red-600 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                  <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
-                <span className="text-red-800 font-medium">✗ 服务器连接失败</span>
-              </div>
-            </div>
-        )}
+
 
         {/* 职位描述输入 */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 border border-white/20">
@@ -589,14 +512,14 @@ const Home = () => {
               {jobDescription.trim() && (
                 <div className="mt-3 text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    已输入 {jobDescription.trim().length} 个字符
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      已输入 {jobDescription.trim().length} 个字符
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
           </div>
         </div>
 

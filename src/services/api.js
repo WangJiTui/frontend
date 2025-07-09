@@ -202,6 +202,33 @@ export const createInterview = async (position, resume_file, job_file) => {
     formData.append('resume_file', resume_file);
     formData.append('job_file', job_file);
     
+    // 验证FormData内容
+    console.log('FormData 验证:');
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, {
+        valueType: typeof value,
+        isFile: value instanceof File,
+        isBlob: value instanceof Blob,
+        name: value?.name || '(no name)',
+        size: value?.size || '(no size)',
+        type: value?.type || '(no type)',
+        constructor: value?.constructor?.name
+      });
+    }
+    
+    // 额外验证：尝试读取job_file内容
+    const job_file_from_formdata = formData.get('job_file');
+    if (job_file_from_formdata instanceof File) {
+      console.log('从FormData获取的job_file确实是File对象');
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        console.log('FormData中job_file的内容:', e.target.result.substring(0, 100));
+      };
+      reader.readAsText(job_file_from_formdata);
+    } else {
+      console.error('警告：从FormData获取的job_file不是File对象!', typeof job_file_from_formdata);
+    }
+    
     const response = await apiClient.post(`/api/interviews/create?position=${encodeURIComponent(position)}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -324,25 +351,7 @@ export const getInterviewSummary = async (sessionId) => {
   }
 };
 
-/**
- * 检查服务器状态
- * @returns {Promise} 服务器状态
- */
-export const getServerStatus = async () => {
-  try {
-    const response = await apiClient.get('/health');
-    return {
-      online: true,
-      status: response.data
-    };
-  } catch (error) {
-    console.error('Server status check failed:', error);
-    return {
-      online: false,
-      error: error.message
-    };
-  }
-};
+
 
 /**
  * 设置API基础URL

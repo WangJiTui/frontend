@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import DialogueInterview from "../components/DialogueInterview";
-import { getServerStatus, createInterview, startInterview, getInterviewQuestion } from "../services/api";
+import { createInterview, startInterview, getInterviewQuestion } from "../services/api";
 
 /**
  * Interview组件 - 面试主页面
@@ -47,10 +47,7 @@ const Interview = () => {
   const [position, setPosition] = useState('');
   const [initError, setInitError] = useState('');
 
-  // 检查服务器状态
-  useEffect(() => {
-    checkServerStatus();
-  }, []);
+
 
   // 生成岗位描述文件
   const generateJobDescriptionFile = useMemo(() => {
@@ -109,15 +106,23 @@ const Interview = () => {
         
         // 在useEffect内部生成JobDescriptionFile，避免依赖项变化
         const jobDescFile = (() => {
+          let content = '';
           if (jobDescription && jobDescription.trim()) {
-            return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
+            content = jobDescription.trim();
+          } else {
+            content = selectedDirections?.length > 0 
+              ? `职位要求：${selectedDirections.join("、")}`
+              : "通用技术岗位职位要求";
           }
           
-          const description = selectedDirections?.length > 0 
-            ? `职位要求：${selectedDirections.join("、")}`
-            : "通用技术岗位职位要求";
+          // 先创建Blob，再转换为File，确保正确的文件格式
+          const blob = new Blob([content], { type: 'text/plain' });
+          const file = new File([blob], 'job_description.txt', { 
+            type: 'text/plain',
+            lastModified: Date.now()
+          });
           
-          return new File([description], 'job_description.txt', { type: 'text/plain' });
+          return file;
         })();
         
         console.log('开始创建面试会话...');
@@ -153,14 +158,7 @@ const Interview = () => {
     initializeInterview();
   }, [jobDescription, selectedDirections, resumeFile]); // 移除generateJobDescriptionFile依赖项
 
-  const checkServerStatus = async () => {
-    try {
-      await getServerStatus();
-      // 服务器状态检查完成，但不存储状态
-    } catch (error) {
-      console.error("Server status check failed:", error);
-    }
-  };
+
 
   /**
    * 处理面试完成
