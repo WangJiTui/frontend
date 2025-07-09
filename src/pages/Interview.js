@@ -107,8 +107,21 @@ const Interview = () => {
         const currentPosition = selectedDirections.join(',');
         setPosition(currentPosition);
         
+        // 在useEffect内部生成JobDescriptionFile，避免依赖项变化
+        const jobDescFile = (() => {
+          if (jobDescription && jobDescription.trim()) {
+            return new File([jobDescription.trim()], 'job_description.txt', { type: 'text/plain' });
+          }
+          
+          const description = selectedDirections?.length > 0 
+            ? `职位要求：${selectedDirections.join("、")}`
+            : "通用技术岗位职位要求";
+          
+          return new File([description], 'job_description.txt', { type: 'text/plain' });
+        })();
+        
         console.log('开始创建面试会话...');
-        const createResult = await createInterview(currentPosition, resumeFile, generateJobDescriptionFile);
+        const createResult = await createInterview(currentPosition, resumeFile, jobDescFile);
         
         if (!createResult.success) {
           throw new Error('创建面试会话失败');
@@ -125,18 +138,10 @@ const Interview = () => {
         if (!startResult.success) {
           throw new Error('开始面试失败');
         }
-        
-        // 第三步：获取第一个问题
-        console.log('获取第一个问题...');
-        const questionResult = await getInterviewQuestion();
-        
-        if (!questionResult.success) {
-          throw new Error('获取第一个问题失败');
-        }
-        
+                
         // 面试初始化完成
         setInterviewStatus('ready');
-        console.log('面试初始化完成');
+        console.log('面试初始化完成，第一个问题将由DialogueInterview组件获取');
         
       } catch (error) {
         console.error('面试初始化失败:', error);
@@ -146,7 +151,7 @@ const Interview = () => {
     };
 
     initializeInterview();
-  }, [jobDescription, selectedDirections, resumeFile, generateJobDescriptionFile]);
+  }, [jobDescription, selectedDirections, resumeFile]); // 移除generateJobDescriptionFile依赖项
 
   const checkServerStatus = async () => {
     try {
