@@ -32,6 +32,7 @@ const Interview = () => {
   const [sessionId, setSessionId] = useState('');
   const [position, setPosition] = useState('');
   const [initError, setInitError] = useState('');
+  const [firstQuestion, setFirstQuestion] = useState('');
 
   const generateJobDescriptionFile = useMemo(() => {
     if (jobDescription && jobDescription.trim()) {
@@ -136,9 +137,15 @@ const Interview = () => {
         if (!startResult.success) {
           throw new Error('开始面试失败');
         }
+        
+        // 保存从startInterview返回的第一个问题
+        if (startResult.firstQuestion) {
+          setFirstQuestion(startResult.firstQuestion);
+          console.log('从startInterview获取到第一个问题:', startResult.firstQuestion);
+        }
                 
         setInterviewStatus('ready');
-        console.log('面试初始化完成，第一个问题将由DialogueInterview组件获取');
+        console.log('面试初始化完成，第一个问题:', startResult.firstQuestion || '将由DialogueInterview组件获取');
         
       } catch (error) {
         console.error('面试初始化失败:', error);
@@ -312,6 +319,7 @@ const Interview = () => {
                 position={position}
                 resumeAnalysisResult={resumeAnalysisResult}
                 autoStart={true}
+                firstQuestion={firstQuestion}
                 onInterviewComplete={handleInterviewComplete}
               />
             </div>

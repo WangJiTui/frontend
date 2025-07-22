@@ -5,7 +5,7 @@ import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 import CameraPreview from './CameraPreview';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, resumeAnalysisResult, autoStart, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, resumeAnalysisResult, autoStart, firstQuestion, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -87,9 +87,34 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     
     const initializeFirstQuestion = async () => {
       try {
-        setFeedback('正在获取第一个问题...');
         setError('');
         
+        // 如果已经有第一个问题，直接使用它
+        if (firstQuestion && firstQuestion.trim()) {
+          console.log('使用从Interview组件传入的第一个问题:', firstQuestion);
+          setCurrentQuestion(firstQuestion);
+          setCurrentQuestionIndex(1);
+          setFeedback('正在启动录音录像...');
+          
+          try {
+            const startSuccess = await startRecording(1500);
+            if (startSuccess) {
+              setIsWaitingForAnswer(true);
+              setFeedback('');
+            } else {
+              setError('录音启动失败，请手动输入回答并点击提交按钮');
+              setIsWaitingForAnswer(false);
+            }
+          } catch (startError) {
+            console.error('启动录音失败:', startError);
+            setError(`录音启动失败: ${startError.message}`);
+            setIsWaitingForAnswer(false);
+          }
+          return;
+        }
+        
+        // 如果没有第一个问题，则调用API获取
+        setFeedback('正在获取第一个问题...');
         const questionResult = await getInterviewQuestion();
         if (questionResult.success) {
           setCurrentQuestion(questionResult.question);
@@ -117,7 +142,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     };
 
     initializeFirstQuestion();
-  }, [autoStart, sessionId, startRecording]);
+  }, [autoStart, sessionId, firstQuestion, startRecording]);
 
   const handleSubmitAnswer = useCallback(async (answer) => {
     try {
