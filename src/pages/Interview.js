@@ -29,7 +29,6 @@ const Interview = () => {
   const [resumeAnalysisResult, setResumeAnalysisResult] = useState(null);
   
   const [interviewStatus, setInterviewStatus] = useState('loading');
-  const [sessionId, setSessionId] = useState('');
   const [position, setPosition] = useState('');
   const [initError, setInitError] = useState('');
 
@@ -126,7 +125,6 @@ const Interview = () => {
           throw new Error('创建面试会话失败');
         }
         
-        setSessionId(createResult.sessionId);
         // 不再在创建时保存简历分析结果
         
         setInterviewStatus('starting');
@@ -158,7 +156,7 @@ const Interview = () => {
     let analysisResult = null;
     try {
       console.log('获取简历分析结果...');
-      const analysisResponse = await getResumeAnalysis(sessionId);
+      const analysisResponse = await getResumeAnalysis();
       if (analysisResponse.success) {
         analysisResult = analysisResponse.analysis;
       }
@@ -322,7 +320,6 @@ const Interview = () => {
                 selectedDirections={selectedDirections}
                 resumeFile={resumeFile}
                 jobDescription={jobDescription}
-                sessionId={sessionId}
                 position={position}
                 autoStart={true}
                 onInterviewComplete={handleInterviewComplete}

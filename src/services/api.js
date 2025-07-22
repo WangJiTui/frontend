@@ -244,7 +244,6 @@ export const createInterview = async (position, resume_file, job_file) => {
       
       return {
         success: true,
-        sessionId: data?.sessionId || null,
         message: response.data.message
       };
     } else {
@@ -366,12 +365,11 @@ export const submitAnswer = async (videoFile, answer) => {
 
 /**
  * 获取简历分析结果
- * @param {string} sessionId - 面试会话ID
  * @returns {Promise} 简历分析结果
  */
-export const getResumeAnalysis = async (sessionId) => {
+export const getResumeAnalysis = async () => {
   try {
-    const response = await apiClient.get(`/api/interviews/resume-analysis/${sessionId}`);
+    const response = await apiClient.get('/api/interviews/resume-analysis');
     
     console.log('getResumeAnalysis响应:', response.data);
     console.log('analysis data类型:', typeof response.data.data);
@@ -394,12 +392,11 @@ export const getResumeAnalysis = async (sessionId) => {
 
 /**
  * 获取面试总结
- * @param {string} sessionId - 面试会话ID
  * @returns {Promise} 面试总结和建议
  */
-export const getInterviewSummary = async (sessionId) => {
+export const getInterviewSummary = async () => {
   try {
-    const response = await apiClient.get(`/interview/summary/${sessionId}`);
+    const response = await apiClient.get('/interview/summary');
     
     return {
       success: true,

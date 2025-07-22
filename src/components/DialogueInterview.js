@@ -5,7 +5,7 @@ import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 import CameraPreview from './CameraPreview';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, autoStart, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, position, autoStart, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -83,7 +83,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
   }, [isVideoRecording]);
 
   useEffect(() => {
-    if (!autoStart || !sessionId) return;
+    if (!autoStart) return;
     
     const initializeFirstQuestion = async () => {
       try {
@@ -117,7 +117,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     };
 
     initializeFirstQuestion();
-  }, [autoStart, sessionId, startRecording]);
+  }, [autoStart, startRecording]);
 
   const handleSubmitAnswer = useCallback(async (answer) => {
     try {
@@ -208,7 +208,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
               }
               
               try {
-                const summaryResult = await getInterviewSummary(sessionId);
+                const summaryResult = await getInterviewSummary();
                 console.log('获取面试总结成功:', summaryResult);
                 onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary);
               } catch (summaryError) {
@@ -241,7 +241,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
             }
             
             try {
-              const summaryResult = await getInterviewSummary(sessionId);
+              const summaryResult = await getInterviewSummary();
               console.log('获取面试总结成功:', summaryResult);
               onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary);
             } catch (summaryError) {
@@ -262,7 +262,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
       setError(error.message);
       setSubmissionState('idle');
     }
-  }, [submissionState, currentQuestion, currentQuestionIndex, isVideoRecording, sessionId, position, answers, onInterviewComplete, startRecording]);
+  }, [submissionState, currentQuestion, currentQuestionIndex, isVideoRecording, position, answers, onInterviewComplete, startRecording]);
 
   const handleTranscriptChange = (result) => {
     
