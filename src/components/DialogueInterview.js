@@ -262,7 +262,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
       setError(error.message);
       setSubmissionState('idle');
     }
-  }, [submissionState, currentQuestion, currentQuestionIndex, isVideoRecording, sessionId, position, resumeAnalysisResult, answers, onInterviewComplete, startRecording]);
+  }, [submissionState, currentQuestion, currentQuestionIndex, isVideoRecording, sessionId, position, answers, onInterviewComplete, startRecording]);
 
   const handleTranscriptChange = (result) => {
     
