@@ -15,9 +15,6 @@ const CameraPreview = ({ videoRecorder, isRecording, className = '' }) => {
             videoRef.current.srcObject = stream;
             setHasError(false);
             setErrorMessage('');
-          } else {
-            // 如果没有流但有videoRecorder，清除视频源
-            videoRef.current.srcObject = null;
           }
         } catch (error) {
           console.error('设置视频流失败:', error);
@@ -27,11 +24,12 @@ const CameraPreview = ({ videoRecorder, isRecording, className = '' }) => {
       }
     };
 
-    // 无论是否在录制，只要有videoRecorder就尝试设置视频流
-    if (videoRecorder) {
+    if (isRecording) {
       setupVideoStream();
-    } else if (videoRef.current) {
-      videoRef.current.srcObject = null;
+    } else {
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
     }
   }, [videoRecorder, isRecording]);
 
@@ -89,7 +87,7 @@ const CameraPreview = ({ videoRecorder, isRecording, className = '' }) => {
       
       {isVisible && (
         <div className="relative">
-          {videoRecorder && videoRecorder.getStream() ? (
+          {isRecording ? (
             <video
               ref={videoRef}
               autoPlay
@@ -104,7 +102,7 @@ const CameraPreview = ({ videoRecorder, isRecording, className = '' }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <p className="text-sm">摄像头未启动</p>
-                <p className="text-xs text-gray-400 mt-1">正在启动摄像头...</p>
+                <p className="text-xs text-gray-400 mt-1">开始录制时将显示画面</p>
               </div>
             </div>
           )}

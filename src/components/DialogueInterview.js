@@ -87,14 +87,14 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     
     const initializeFirstQuestion = async () => {
       try {
+        setFeedback('正在初始化面试...');
         setError('');
         
-        // 如果已经有第一个问题，直接使用它
+        // 使用传入的第一个问题，而不是重新请求
         if (firstQuestion && firstQuestion.trim()) {
-          console.log('使用从Interview组件传入的第一个问题:', firstQuestion);
+          console.log('使用预设的第一个问题:', firstQuestion);
           setCurrentQuestion(firstQuestion);
           setCurrentQuestionIndex(1);
-          setFeedback('正在启动录音录像...');
           
           try {
             const startSuccess = await startRecording(1500);
@@ -110,33 +110,34 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
             setError(`录音启动失败: ${startError.message}`);
             setIsWaitingForAnswer(false);
           }
-          return;
-        }
-        
-        // 如果没有第一个问题，则调用API获取
-        setFeedback('正在获取第一个问题...');
-        const questionResult = await getInterviewQuestion();
-        if (questionResult.success) {
-          setCurrentQuestion(questionResult.question);
-          setCurrentQuestionIndex(questionResult.questionIndex);
+        } else {
+          // 如果没有预设问题，则请求第一个问题（向后兼容）
+          console.log('没有预设问题，请求第一个问题');
+          setFeedback('正在获取第一个问题...');
           
-          try {
-            const startSuccess = await startRecording(1500);
-            if (startSuccess) {
-              setIsWaitingForAnswer(true);
-              setFeedback('');
-            } else {
-              setError('录音启动失败，请手动输入回答并点击提交按钮');
+          const questionResult = await getInterviewQuestion();
+          if (questionResult.success) {
+            setCurrentQuestion(questionResult.question);
+            setCurrentQuestionIndex(questionResult.questionIndex);
+            
+            try {
+              const startSuccess = await startRecording(1500);
+              if (startSuccess) {
+                setIsWaitingForAnswer(true);
+                setFeedback('');
+              } else {
+                setError('录音启动失败，请手动输入回答并点击提交按钮');
+                setIsWaitingForAnswer(false);
+              }
+            } catch (startError) {
+              console.error('启动录音失败:', startError);
+              setError(`录音启动失败: ${startError.message}`);
               setIsWaitingForAnswer(false);
             }
-          } catch (startError) {
-            console.error('启动录音失败:', startError);
-            setError(`录音启动失败: ${startError.message}`);
-            setIsWaitingForAnswer(false);
           }
         }
       } catch (error) {
-        console.error('获取第一个问题失败:', error);
+        console.error('初始化面试失败:', error);
         setError(error.message);
       }
     };
