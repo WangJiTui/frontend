@@ -283,7 +283,7 @@ export const startInterview = async () => {
 };
 
 /**
- * 获取面试问题
+ * 获取面试问题 - 支持实时面试流程
  * @returns {Promise} 问题内容
  */
 export const getInterviewQuestion = async () => {
@@ -305,6 +305,7 @@ export const getInterviewQuestion = async () => {
           question: data,
           questionIndex: null,
           isEnd: false,
+          hasNextQuestion: true,
           message: response.data.message
         };
       }
@@ -312,9 +313,10 @@ export const getInterviewQuestion = async () => {
       // 如果data是对象，按原来的逻辑处理
       return {
         success: true,
-        question: data?.question,
+        question: data?.question || data,
         questionIndex: data?.questionIndex,
         isEnd: data?.isEnd || false,
+        hasNextQuestion: !data?.isEnd,
         message: response.data.message
       };
     } else {

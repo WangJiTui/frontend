@@ -3,6 +3,7 @@ import { getInterviewQuestion, submitAnswer, getInterviewSummary, completeInterv
 import RTASRTranscription from './RTASRTranscription';
 import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
+import CameraPreview from './CameraPreview';
 
 const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, resumeAnalysisResult, autoStart, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
@@ -154,14 +155,45 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
       };
       setAnswers(prev => [...prev, newAnswer]);
 
+      // 第一步：提交答案到后端
+      console.log('提交答案到后端...');
       const submitResult = await submitAnswer(videoBlob || new Blob(), answer);
       
       if (submitResult.success) {
+        console.log('答案提交成功，准备获取下一个问题...');
+        setFeedback('答案已提交，正在获取下一个问题...');
+        
+        // 第二步：获取下一个问题
         try {
           const questionResult = await getInterviewQuestion();
           
           if (questionResult.success) {
-            if (questionResult.isEnd) {
+            if (questionResult.question && questionResult.question.trim()) {
+              // 有新问题，继续面试
+              console.log('获取到新问题:', questionResult.question);
+              setCurrentQuestion(questionResult.question);
+              setCurrentQuestionIndex((prev) => (prev || 0) + 1);
+              setSubmissionState('idle');
+              setFeedback('正在为下一个问题启动录音录像...');
+              
+              // 启动新一轮录音录像
+              try {
+                const startSuccess = await startRecording();
+                if (startSuccess) {
+                  setIsWaitingForAnswer(true);
+                  setFeedback('');
+                } else {
+                  setError('录音启动失败，请手动输入回答并点击提交按钮');
+                  setIsWaitingForAnswer(false);
+                }
+              } catch (startError) {
+                console.error('启动录音失败:', startError);
+                setError(`录音启动失败: ${startError.message}`);
+                setIsWaitingForAnswer(false);
+              }
+            } else {
+              // 没有新问题，面试结束
+              console.log('面试已结束');
               setIsInterviewEnded(true);
               setIsWaitingForAnswer(false);
               setCurrentQuestion('');
@@ -183,32 +215,43 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
                 console.error('获取面试总结失败:', summaryError);
                 onInterviewComplete(answers.concat([newAnswer]), null, resumeAnalysisResult);
               }
-            } else {
-              setCurrentQuestion(questionResult.question);
-              setCurrentQuestionIndex(questionResult.questionIndex);
-              setSubmissionState('idle');
-              setFeedback('正在为下一个问题启动录音录像...');
-              
-              try {
-                const startSuccess = await startRecording();
-                if (startSuccess) {
-                  setIsWaitingForAnswer(true);
-                  setFeedback('');
-                } else {
-                  setError('录音启动失败，请手动输入回答并点击提交按钮');
-                  setIsWaitingForAnswer(false);
-                }
-              } catch (startError) {
-                console.error('启动录音失败:', startError);
-                setError(`录音启动失败: ${startError.message}`);
-                setIsWaitingForAnswer(false);
-              }
             }
+          } else {
+            throw new Error('获取下一个问题失败');
           }
-        } catch (error) {
-          console.error('获取下一个问题失败:', error);
-          setError(error.message);
-          setSubmissionState('idle');
+        } catch (questionError) {
+          console.error('获取下一个问题失败:', questionError);
+          
+          // 检查是否是因为面试已结束
+          if (questionError.message.includes('面试已结束') || 
+              questionError.message.includes('no more questions') ||
+              questionError.response?.status === 404) {
+            console.log('面试已结束（通过错误判断）');
+            setIsInterviewEnded(true);
+            setIsWaitingForAnswer(false);
+            setCurrentQuestion('');
+            setSubmissionState('submitted');
+            setFeedback('面试已完成，正在完成面试流程...');
+            
+            try {
+              await completeInterview(position);
+              console.log('面试完成接口调用成功');
+            } catch (completeError) {
+              console.error('完成面试接口调用失败:', completeError);
+            }
+            
+            try {
+              const summaryResult = await getInterviewSummary(sessionId);
+              console.log('获取面试总结成功:', summaryResult);
+              onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary, resumeAnalysisResult);
+            } catch (summaryError) {
+              console.error('获取面试总结失败:', summaryError);
+              onInterviewComplete(answers.concat([newAnswer]), null, resumeAnalysisResult);
+            }
+          } else {
+            setError(questionError.message);
+            setSubmissionState('idle');
+          }
         }
       } else {
         setError('提交回答失败，请重试');
@@ -356,7 +399,8 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
       )}
 
       <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+          {/* 语音转写区域 */}
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
               <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -373,6 +417,23 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
             />
           </div>
 
+          {/* 摄像头预览区域 */}
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              视频录制
+            </h3>
+            
+            <CameraPreview
+              videoRecorder={videoRecorderRef.current}
+              isRecording={isVideoRecording}
+              className="mb-6"
+            />
+          </div>
+
+          {/* 操作面板区域 */}
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
               <svg className="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -416,6 +477,13 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
                 </div>
                 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600">录像状态:</span>
+                  <span className={`font-medium ${isVideoRecording ? 'text-red-600' : 'text-gray-500'}`}>
+                    {isVideoRecording ? '录制中' : '未录制'}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="text-gray-600">当前状态:</span>
                   <span className="font-medium text-blue-600">
                     {getCurrentStatus() === 'answering' ? '等待回答' : 
@@ -423,6 +491,29 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
                      getCurrentStatus() === 'completed' ? '已完成' : '准备中'}
                   </span>
                 </div>
+
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600">面试进度:</span>
+                  <span className="font-medium text-purple-600">
+                    {isInterviewEnded ? '已完成' : 
+                     currentQuestionIndex ? `第 ${currentQuestionIndex} 题` : '准备中'}
+                  </span>
+                </div>
+              </div>
+
+              {/* 实时面试说明 */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="flex items-center mb-2">
+                  <svg className="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-sm font-medium text-blue-800">实时面试模式</span>
+                </div>
+                <p className="text-xs text-blue-700">
+                  • 提交回答后自动获取下一题<br/>
+                  • 系统实时分析您的表现<br/>
+                  • 面试结束时生成总结报告
+                </p>
               </div>
             </div>
           </div>
