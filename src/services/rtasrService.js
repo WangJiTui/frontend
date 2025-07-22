@@ -533,10 +533,11 @@ class RTASRService {
             return;
         }
         
+        // 达到最大重试次数后不再重试，直接禁用服务
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-            console.log('达到最大重试次数');
-            this.updateStatus('error', '连接已断开，请刷新页面重试');
-            this.cleanupConnection();
+            console.log('达到最大重试次数，禁用RTASR服务');
+            this.disable();
+            this.updateStatus('disabled', 'RTASR服务不可用，已自动切换到本地服务');
             return;
         }
 
@@ -588,10 +589,10 @@ class RTASRService {
                 // 继续重试
                 this.attemptReconnect();
             } else {
-                this.updateStatus('error', '重连失败，请手动重试');
-                if (this.onErrorCallback) {
-                    this.onErrorCallback(new Error('重连失败，请手动重试'));
-                }
+                // 达到最大重试次数，禁用服务
+                console.log('所有重连尝试失败，禁用RTASR服务');
+                this.disable();
+                this.updateStatus('disabled', 'RTASR服务连接失败，已自动切换到本地服务');
             }
         }
     }

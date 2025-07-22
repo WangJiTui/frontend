@@ -280,38 +280,10 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     
     console.log(`状态变化: ${status} - ${message}`);
     
-    if (status === 'speaking_completed' && isWaitingForAnswer) {
-      console.log('检测到语音结束，准备自动提交');
-      setAutoSubmitTimeout();
-    } else if (status === 'speaking_started') {
-      clearAutoSubmitTimeout();
-    }
+    // 删除自动提交逻辑
   };
 
-  const setAutoSubmitTimeout = () => {
-    clearAutoSubmitTimeout();
-    autoSubmitTimeoutRef.current = setTimeout(() => {
-      console.log('自动提交触发');
-      handleAutoSubmit();
-    }, 2000);
-  };
-
-  const clearAutoSubmitTimeout = () => {
-    if (autoSubmitTimeoutRef.current) {
-      clearTimeout(autoSubmitTimeoutRef.current);
-      autoSubmitTimeoutRef.current = null;
-    }
-  };
-
-  const handleAutoSubmit = async () => {
-    if (!rtasrRef.current) return;
-    
-    const transcript = rtasrRef.current.getFinalTranscript();
-    if (transcript && transcript.trim() && isWaitingForAnswer && submissionState === 'idle') {
-      console.log('自动提交回答:', transcript);
-      await handleSubmitAnswer(transcript);
-    }
-  };
+  // 删除自动提交相关函数
 
   const handleManualSubmit = async () => {
     if (!rtasrRef.current) {
@@ -391,8 +363,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
               <span className="text-sm font-medium text-blue-800">回答提示</span>
             </div>
             <p className="text-sm text-blue-700">
-              请开始您的回答。系统会自动录制您的音频和视频，并在您停止说话后自动提交。
-              您也可以手动点击"提交回答"按钮。
+              开始面试后会自动开始录音录像。请充分思考后点击"提交回答"按钮提交您的回答。
             </p>
           </div>
         </div>
@@ -413,6 +384,8 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
               ref={rtasrRef}
               onTranscriptChange={handleTranscriptChange}
               onStatusChange={handleStatusChange}
+              autoStart={true}
+              isInterviewMode={true}
               className="mb-6"
             />
           </div>
@@ -510,8 +483,8 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
                   <span className="text-sm font-medium text-blue-800">实时面试模式</span>
                 </div>
                 <p className="text-xs text-blue-700">
-                  • 提交回答后自动获取下一题<br/>
-                  • 系统实时分析您的表现<br/>
+                  • 开始面试后自动录音录像<br/>
+                  • 请思考完毕后手动提交回答<br/>
                   • 面试结束时生成总结报告
                 </p>
               </div>

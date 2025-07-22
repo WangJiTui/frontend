@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, { useReducer, useEffect, useRef, useCallback, forwardRef, useImperativeHandle, useState  } from 'react';
 import RTASRService from '../services/rtasrService';
 import FallbackSpeechService from '../services/fallbackSpeechService';
 
@@ -72,6 +72,7 @@ const RTASRTranscription = forwardRef(({ onTranscriptChange, onStatusChange, aut
     const isInitializedRef = useRef(false);
     const currentServiceRef = useRef('primary');
     const switchAttemptRef = useRef(false);
+    const autoStartedRef = useRef(false);
 
     const startSilenceTimer = useCallback(() => {
         if (isInterviewMode) {
@@ -136,13 +137,39 @@ const RTASRTranscription = forwardRef(({ onTranscriptChange, onStatusChange, aut
             
             let success = false;
             
-            if (currentServiceRef.current === 'primary' && rtasrRef.current && !rtasrRef.current.isServiceDisabled()) {
-                success = await rtasrRef.current.startRealTimeTranscription();
-            }
-            else if (currentServiceRef.current === 'fallback' && fallbackRef.current) {
+            // 首先尝试RTASR服务
+            if (rtasrRef.current && !rtasrRef.current.isServiceDisabled()) {
+                try {
+                    success = await rtasrRef.current.startRealTimeTranscription();
+                    if (success) {
+                        currentServiceRef.current = 'primary';
+                    } else {
+                        console.log('RTASR服务启动失败，自动切换到本地服务');
+                        throw new Error('RTASR服务不可用');
+                    }
+                } catch (error) {
+                    console.log('RTASR服务失败，自动切换到本地服务:', error.message);
+                    // 禁用RTASR服务
+                    if (rtasrRef.current) {
+                        rtasrRef.current.disable();
+                    }
+                    
+                    // 切换到备用服务
+                    if (fallbackRef.current) {
+                        try {
+                            success = await fallbackRef.current.startRealTimeTranscription();
+                            if (success) {
+                                currentServiceRef.current = 'fallback';
+                                console.log('已切换到本地服务');
+                            }
+                        } catch (fallbackError) {
+                            console.error('备用服务也启动失败:', fallbackError);
+                        }
+                    }
+                }
+            } else if (currentServiceRef.current === 'fallback' && fallbackRef.current) {
                 success = await fallbackRef.current.startRealTimeTranscription();
-            }
-            else if (!rtasrRef.current) {
+            } else if (!rtasrRef.current) {
                 console.log('没有可用服务，初始化RTASR服务');
                 return;
             }
@@ -416,7 +443,13 @@ const RTASRTranscription = forwardRef(({ onTranscriptChange, onStatusChange, aut
     useEffect(() => {
         const initializeAndStart = async () => {
             await initializeServices();
-            if (autoStart) {
+            // 在面试模式下，且是autoStart时，自动开始录音
+            if (autoStart && isInterviewMode && !autoStartedRef.current) {
+                autoStartedRef.current = true;
+                setTimeout(() => {
+                    handleStartListening();
+                }, 1000);
+            } else if (autoStart && !isInterviewMode) {
                 setTimeout(() => {
                     handleStartListening();
                 }, 500);
@@ -438,7 +471,7 @@ const RTASRTranscription = forwardRef(({ onTranscriptChange, onStatusChange, aut
                 fallbackRef.current.stopRealTimeTranscription().catch(console.error);
             }
         };
-    }, []);
+    }, [autoStart, isInterviewMode]);
 
     useImperativeHandle(ref, () => ({
         startRealTimeTranscription: handleStartListening,
@@ -516,36 +549,38 @@ const RTASRTranscription = forwardRef(({ onTranscriptChange, onStatusChange, aut
                         </div>
                     </div>
                     
-                    <div className="flex space-x-2">
-                        <button
-                            onClick={handleStartListening}
-                            disabled={state.isListening}
-                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
-                        >
-                            {state.isListening ? '录音中...' : '开始录音'}
-                        </button>
-                        
-                        <button
-                            onClick={handleStopListening}
-                            disabled={!state.isListening}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
-                        >
-                            停止录音
-                        </button>
-                        
-                        <button
-                            onClick={performDiagnosis}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
-                        >
-                            诊断
-                        </button>
-                    </div>
+                    {!isInterviewMode && (
+                        <div className="flex space-x-2">
+                            <button
+                                onClick={handleStartListening}
+                                disabled={state.isListening}
+                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+                            >
+                                {state.isListening ? '录音中...' : '开始录音'}
+                            </button>
+                            
+                            <button
+                                onClick={handleStopListening}
+                                disabled={!state.isListening}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+                            >
+                                停止录音
+                            </button>
+                            
+                            <button
+                                onClick={performDiagnosis}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
+                            >
+                                诊断
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="bg-gray-50 rounded-md p-4 min-h-[100px]">
-                    <div className="text-sm text-gray-600 mb-2">转写结果：</div>
+                    <div className="text-sm text-gray-600 mb-2">回答内容：</div>
                     <div className="text-gray-800 whitespace-pre-wrap">
-                        {state.transcript || '等待开始录音...'}
+                        {state.transcript || (isInterviewMode ? '等待面试开始...' : '等待开始录音...')}
                     </div>
                 </div>
 
