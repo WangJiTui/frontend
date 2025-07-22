@@ -245,7 +245,6 @@ export const createInterview = async (position, resume_file, job_file) => {
       return {
         success: true,
         sessionId: data?.sessionId || null,
-        resumeAnalysis: data?.resumeAnalysis || data, // 如果data直接是简历分析结果
         message: response.data.message
       };
     } else {
@@ -362,6 +361,34 @@ export const submitAnswer = async (videoFile, answer) => {
   } catch (error) {
     console.error('Submit answer error:', error);
     throw new Error(error.response?.data?.message || '提交回答失败，请稍后重试');
+  }
+};
+
+/**
+ * 获取简历分析结果
+ * @param {string} sessionId - 面试会话ID
+ * @returns {Promise} 简历分析结果
+ */
+export const getResumeAnalysis = async (sessionId) => {
+  try {
+    const response = await apiClient.get(`/api/interviews/resume-analysis/${sessionId}`);
+    
+    console.log('getResumeAnalysis响应:', response.data);
+    console.log('analysis data类型:', typeof response.data.data);
+    console.log('analysis data内容:', response.data.data);
+    
+    if (response.data.code === 200) {
+      return {
+        success: true,
+        analysis: response.data.data,
+        message: response.data.message
+      };
+    } else {
+      throw new Error(response.data.message || '获取简历分析失败');
+    }
+  } catch (error) {
+    console.error('Get resume analysis error:', error);
+    throw new Error(error.response?.data?.message || '获取简历分析失败，请稍后重试');
   }
 };
 

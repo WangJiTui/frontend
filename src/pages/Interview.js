@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import DialogueInterview from "../components/DialogueInterview";
-import { createInterview, startInterview, getInterviewQuestion } from "../services/api";
+import { createInterview, startInterview, getInterviewQuestion, getResumeAnalysis } from "../services/api";
 
 const Interview = () => {
   const location = useLocation();
@@ -32,7 +32,6 @@ const Interview = () => {
   const [sessionId, setSessionId] = useState('');
   const [position, setPosition] = useState('');
   const [initError, setInitError] = useState('');
-  const [firstQuestion, setFirstQuestion] = useState(''); // 添加第一个问题状态
 
   const generateJobDescriptionFile = useMemo(() => {
     if (jobDescription && jobDescription.trim()) {
@@ -128,7 +127,7 @@ const Interview = () => {
         }
         
         setSessionId(createResult.sessionId);
-        setResumeAnalysisResult(createResult.resumeAnalysis);
+        // 不再在创建时保存简历分析结果
         
         setInterviewStatus('starting');
         console.log('开始面试...');
@@ -138,9 +137,8 @@ const Interview = () => {
           throw new Error('开始面试失败');
         }
                 
-        setFirstQuestion(startResult.firstQuestion); // 保存第一个问题
         setInterviewStatus('ready');
-        console.log('面试初始化完成，获得第一个问题:', startResult.firstQuestion);
+        console.log('面试初始化完成，第一个问题将由DialogueInterview组件获取');
         
       } catch (error) {
         console.error('面试初始化失败:', error);
@@ -152,10 +150,24 @@ const Interview = () => {
     initializeInterview();
   }, [jobDescription, selectedDirections, resumeFile]);
 
-  const handleInterviewComplete = (answers, summary, resumeAnalysis) => {
+  const handleInterviewComplete = async (answers, summary) => {
     setInterviewAnswers(answers);
     setInterviewSummary(summary);
-    setResumeAnalysisResult(resumeAnalysis);
+    
+    // 在总结时获取简历分析结果
+    let analysisResult = null;
+    try {
+      console.log('获取简历分析结果...');
+      const analysisResponse = await getResumeAnalysis(sessionId);
+      if (analysisResponse.success) {
+        analysisResult = analysisResponse.analysis;
+      }
+      setResumeAnalysisResult(analysisResult);
+    } catch (error) {
+      console.error('获取简历分析失败:', error);
+      setResumeAnalysisResult(null);
+    }
+    
     setIsInterviewComplete(true);
     
     setTimeout(() => {
@@ -164,7 +176,7 @@ const Interview = () => {
           answers: answers,
           directions: selectedDirections,
           summary: summary,
-          resumeAnalysis: resumeAnalysis
+          resumeAnalysis: analysisResult
         } 
       });
     }, 2000);
@@ -312,9 +324,7 @@ const Interview = () => {
                 jobDescription={jobDescription}
                 sessionId={sessionId}
                 position={position}
-                resumeAnalysisResult={resumeAnalysisResult}
                 autoStart={true}
-                firstQuestion={firstQuestion}
                 onInterviewComplete={handleInterviewComplete}
               />
             </div>

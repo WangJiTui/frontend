@@ -5,7 +5,7 @@ import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 import CameraPreview from './CameraPreview';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, resumeAnalysisResult, autoStart, firstQuestion, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, sessionId, position, autoStart, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -87,14 +87,13 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
     
     const initializeFirstQuestion = async () => {
       try {
-        setFeedback('正在初始化面试...');
+        setFeedback('正在获取第一个问题...');
         setError('');
         
-        // 使用传入的第一个问题，而不是重新请求
-        if (firstQuestion && firstQuestion.trim()) {
-          console.log('使用预设的第一个问题:', firstQuestion);
-          setCurrentQuestion(firstQuestion);
-          setCurrentQuestionIndex(1);
+        const questionResult = await getInterviewQuestion();
+        if (questionResult.success) {
+          setCurrentQuestion(questionResult.question);
+          setCurrentQuestionIndex(questionResult.questionIndex);
           
           try {
             const startSuccess = await startRecording(1500);
@@ -110,40 +109,15 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
             setError(`录音启动失败: ${startError.message}`);
             setIsWaitingForAnswer(false);
           }
-        } else {
-          // 如果没有预设问题，则请求第一个问题（向后兼容）
-          console.log('没有预设问题，请求第一个问题');
-          setFeedback('正在获取第一个问题...');
-          
-          const questionResult = await getInterviewQuestion();
-          if (questionResult.success) {
-            setCurrentQuestion(questionResult.question);
-            setCurrentQuestionIndex(questionResult.questionIndex);
-            
-            try {
-              const startSuccess = await startRecording(1500);
-              if (startSuccess) {
-                setIsWaitingForAnswer(true);
-                setFeedback('');
-              } else {
-                setError('录音启动失败，请手动输入回答并点击提交按钮');
-                setIsWaitingForAnswer(false);
-              }
-            } catch (startError) {
-              console.error('启动录音失败:', startError);
-              setError(`录音启动失败: ${startError.message}`);
-              setIsWaitingForAnswer(false);
-            }
-          }
         }
       } catch (error) {
-        console.error('初始化面试失败:', error);
+        console.error('获取第一个问题失败:', error);
         setError(error.message);
       }
     };
 
     initializeFirstQuestion();
-  }, [autoStart, sessionId, firstQuestion, startRecording]);
+  }, [autoStart, sessionId, startRecording]);
 
   const handleSubmitAnswer = useCallback(async (answer) => {
     try {
@@ -236,10 +210,10 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
               try {
                 const summaryResult = await getInterviewSummary(sessionId);
                 console.log('获取面试总结成功:', summaryResult);
-                onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary, resumeAnalysisResult);
+                onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary);
               } catch (summaryError) {
                 console.error('获取面试总结失败:', summaryError);
-                onInterviewComplete(answers.concat([newAnswer]), null, resumeAnalysisResult);
+                onInterviewComplete(answers.concat([newAnswer]), null);
               }
             }
           } else {
@@ -269,10 +243,10 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, ses
             try {
               const summaryResult = await getInterviewSummary(sessionId);
               console.log('获取面试总结成功:', summaryResult);
-              onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary, resumeAnalysisResult);
+              onInterviewComplete(answers.concat([newAnswer]), summaryResult.summary);
             } catch (summaryError) {
               console.error('获取面试总结失败:', summaryError);
-              onInterviewComplete(answers.concat([newAnswer]), null, resumeAnalysisResult);
+              onInterviewComplete(answers.concat([newAnswer]), null);
             }
           } else {
             setError(questionError.message);
