@@ -1,9 +1,13 @@
 import axios from "axios";
+import * as mockApi from './mockApi';
+
+// 开发模式配置 - 设置为 true 使用模拟API，false 使用真实后端
+const USE_MOCK_API = true;
 
 const BASE_URL = "http://localhost:8080";
 
 // 创建axios实例
-const apiClient = axios.create({
+const realApiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 300000, // 5分钟超时
   headers: {
@@ -12,7 +16,7 @@ const apiClient = axios.create({
 });
 
 // 请求拦截器 - 添加token到请求头
-apiClient.interceptors.request.use(
+realApiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -28,7 +32,7 @@ apiClient.interceptors.request.use(
 );
 
 // 响应拦截器
-apiClient.interceptors.response.use(
+realApiClient.interceptors.response.use(
   (response) => {
     console.log(`Response received from ${response.config.url}:`, response.status);
     return response;
@@ -54,8 +58,13 @@ apiClient.interceptors.response.use(
  * @returns {Promise} 登录结果
  */
 export const login = async (username, passwordHash) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.login(username, passwordHash);
+  }
+
   try {
-    const response = await apiClient.post('/api/student/login', {
+    const response = await realApiClient.post('/api/student/login', {
       username,
       passwordHash,
       email: null,
@@ -91,10 +100,15 @@ export const login = async (username, passwordHash) => {
  * @returns {Promise} 注册结果
  */
 export const register = async (username, email, passwordHash) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.register(username, email, passwordHash);
+  }
+
   try {
     console.log('发送注册请求:', { username, email, passwordHash });
     
-    const response = await apiClient.post('/api/student/regist', {
+    const response = await realApiClient.post('/api/student/regist', {
       username,
       passwordHash,
       email,
@@ -151,8 +165,13 @@ export const register = async (username, email, passwordHash) => {
  * @returns {Promise} 检查结果
  */
 export const checkStudentNumber = async (userName) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.checkStudentNumber(userName);
+  }
+
   try {
-    const response = await apiClient.post(`/api/student/checkStudentNumber?userName=${encodeURIComponent(userName)}`);
+    const response = await realApiClient.post(`/api/student/checkStudentNumber?userName=${encodeURIComponent(userName)}`);
     
     return {
       success: response.data.code === 200,
@@ -170,8 +189,13 @@ export const checkStudentNumber = async (userName) => {
  * @returns {Promise} 用户信息
  */
 export const getUserInfo = async () => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.getUserInfo();
+  }
+
   try {
-    const response = await apiClient.get('/api/student/getUserInfo');
+    const response = await realApiClient.get('/api/student/getUserInfo');
     
     if (response.data.code === 200) {
       return {
@@ -197,6 +221,11 @@ export const getUserInfo = async () => {
  * @returns {Promise} 创建结果
  */
 export const createInterview = async (position, resume_file, job_file) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.createInterview(position, resume_file, job_file);
+  }
+
   try {
     const formData = new FormData();
     formData.append('resume_file', resume_file);
@@ -229,7 +258,7 @@ export const createInterview = async (position, resume_file, job_file) => {
       console.error('警告：从FormData获取的job_file不是File对象!', typeof job_file_from_formdata);
     }
     
-    const response = await apiClient.post(`/api/interviews/create?position=${encodeURIComponent(position)}`, formData, {
+    const response = await realApiClient.post(`/api/interviews/create?position=${encodeURIComponent(position)}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -260,8 +289,13 @@ export const createInterview = async (position, resume_file, job_file) => {
  * @returns {Promise} 开始结果
  */
 export const startInterview = async () => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.startInterview();
+  }
+
   try {
-    const response = await apiClient.post('/api/interviews/start');
+    const response = await realApiClient.post('/api/interviews/start');
     
     console.log('startInterview响应:', response.data);
     
@@ -285,8 +319,13 @@ export const startInterview = async () => {
  * @returns {Promise} 问题内容
  */
 export const getInterviewQuestion = async () => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.getInterviewQuestion();
+  }
+
   try {
-    const response = await apiClient.get('/api/interviews/question');
+    const response = await realApiClient.get('/api/interviews/question');
     
     console.log('getInterviewQuestion响应:', response.data);
     console.log('data类型:', typeof response.data.data);
@@ -331,12 +370,17 @@ export const getInterviewQuestion = async () => {
  * @returns {Promise} 提交结果
  */
 export const submitAnswer = async (videoFile, answer) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.submitAnswer(videoFile, answer);
+  }
+
   try {
     const formData = new FormData();
     formData.append('videoFile', videoFile);
     
     // 根据API文档，answer作为query参数传递
-    const response = await apiClient.post(`/api/interviews/question?answer=${encodeURIComponent(answer)}`, formData, {
+    const response = await realApiClient.post(`/api/interviews/question?answer=${encodeURIComponent(answer)}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -366,8 +410,13 @@ export const submitAnswer = async (videoFile, answer) => {
  * @returns {Promise} 简历分析结果
  */
 export const getResumeAnalysis = async () => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.getResumeAnalysis();
+  }
+
   try {
-    const response = await apiClient.get('/api/interviews/resume-analysis');
+    const response = await realApiClient.get('/api/interviews/resume-analysis');
     
     console.log('getResumeAnalysis响应:', response.data);
     console.log('analysis data类型:', typeof response.data.data);
@@ -393,8 +442,13 @@ export const getResumeAnalysis = async () => {
  * @returns {Promise} 面试总结和建议
  */
 export const getInterviewSummary = async () => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.getInterviewSummary();
+  }
+
   try {
-    const response = await apiClient.get('/interview/summary');
+    const response = await realApiClient.get('/interview/summary');
     
     return {
       success: true,
@@ -413,8 +467,33 @@ export const getInterviewSummary = async () => {
  * @param {string} url - 新的基础URL
  */
 export const setApiBaseUrl = (url) => {
-  apiClient.defaults.baseURL = url;
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.setApiBaseUrl(url);
+  }
+
+  realApiClient.defaults.baseURL = url;
   console.log(`API base URL updated to: ${url}`);
+};
+
+/**
+ * 检查是否使用模拟API
+ * @returns {boolean} 是否使用模拟API
+ */
+export const isUsingMockApi = () => {
+  return USE_MOCK_API;
+};
+
+/**
+ * 获取API模式信息
+ * @returns {object} API模式信息
+ */
+export const getApiMode = () => {
+  return {
+    useMock: USE_MOCK_API,
+    baseUrl: getCurrentApiBaseUrl(),
+    mode: USE_MOCK_API ? 'mock' : 'real'
+  };
 };
 
 /**
@@ -422,7 +501,12 @@ export const setApiBaseUrl = (url) => {
  * @returns {string} 当前基础URL
  */
 export const getCurrentApiBaseUrl = () => {
-  return apiClient.defaults.baseURL;
+  // 如果启用模拟API，返回模拟基础URL
+  if (USE_MOCK_API) {
+    return mockApi.getCurrentApiBaseUrl();
+  }
+
+  return realApiClient.defaults.baseURL;
 };
 
 /**
@@ -431,8 +515,13 @@ export const getCurrentApiBaseUrl = () => {
  * @returns {Promise} 完成结果
  */
 export const completeInterview = async (position) => {
+  // 如果启用模拟API，使用模拟服务
+  if (USE_MOCK_API) {
+    return mockApi.completeInterview(position);
+  }
+
   try {
-    const response = await apiClient.post(`/api/interviews/complete?position=${encodeURIComponent(position)}`);
+    const response = await realApiClient.post(`/api/interviews/complete?position=${encodeURIComponent(position)}`);
     
     console.log('completeInterview响应:', response.data);
     console.log('complete data类型:', typeof response.data.data);
@@ -454,4 +543,5 @@ export const completeInterview = async (position) => {
 };
 
 // 导出axios实例供其他地方使用
-export { apiClient };
+// 如果使用模拟API，导出模拟的apiClient；否则导出真实的apiClient
+export const apiClient = USE_MOCK_API ? mockApi.apiClient : realApiClient;
