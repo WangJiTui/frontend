@@ -5,7 +5,7 @@ import Button from './Button';
 import VideoRecorder from '../services/videoRecorder';
 import CameraPreview from './CameraPreview';
 
-const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, position, autoStart, onInterviewComplete }) => {
+const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, position, autoStart, firstQuestion, onInterviewComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -87,13 +87,13 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, pos
     
     const initializeFirstQuestion = async () => {
       try {
-        setFeedback('正在获取第一个问题...');
+        setFeedback('正在初始化第一个问题...');
         setError('');
         
-        const questionResult = await getInterviewQuestion();
-        if (questionResult.success) {
-          setCurrentQuestion(questionResult.question);
-          setCurrentQuestionIndex(questionResult.questionIndex);
+        // 使用start接口返回的第一个问题
+        if (firstQuestion) {
+          setCurrentQuestion(firstQuestion);
+          setCurrentQuestionIndex(1);
           
           try {
             const startSuccess = await startRecording(1500);
@@ -109,15 +109,37 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, pos
             setError(`录音启动失败: ${startError.message}`);
             setIsWaitingForAnswer(false);
           }
+        } else {
+          // 如果没有firstQuestion，则调用getInterviewQuestion获取
+          const questionResult = await getInterviewQuestion();
+          if (questionResult.success) {
+            setCurrentQuestion(questionResult.question);
+            setCurrentQuestionIndex(1);
+            
+            try {
+              const startSuccess = await startRecording(1500);
+              if (startSuccess) {
+                setIsWaitingForAnswer(true);
+                setFeedback('');
+              } else {
+                setError('录音启动失败，请手动输入回答并点击提交按钮');
+                setIsWaitingForAnswer(false);
+              }
+            } catch (startError) {
+              console.error('启动录音失败:', startError);
+              setError(`录音启动失败: ${startError.message}`);
+              setIsWaitingForAnswer(false);
+            }
+          }
         }
       } catch (error) {
-        console.error('获取第一个问题失败:', error);
+        console.error('初始化第一个问题失败:', error);
         setError(error.message);
       }
     };
 
     initializeFirstQuestion();
-  }, [autoStart, startRecording]);
+  }, [autoStart, firstQuestion, startRecording]);
 
   const handleSubmitAnswer = useCallback(async (answer) => {
     try {
@@ -150,7 +172,6 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, pos
       const newAnswer = {
         question: currentQuestion,
         answer: answer,
-        questionIndex: currentQuestionIndex,
         videoBlob: videoBlob
       };
       setAnswers(prev => [...prev, newAnswer]);
@@ -172,7 +193,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, pos
               // 有新问题，继续面试
               console.log('获取到新问题:', questionResult.question);
               setCurrentQuestion(questionResult.question);
-              setCurrentQuestionIndex((prev) => (prev || 0) + 1);
+              setCurrentQuestionIndex(prev => prev + 1);
               setSubmissionState('idle');
               setFeedback('正在为下一个问题启动录音录像...');
               
@@ -340,7 +361,7 @@ const DialogueInterview = ({ selectedDirections, resumeFile, jobDescription, pos
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">面试问题 #{currentQuestionIndex || 1}</h3>
+                <h3 className="text-lg font-semibold text-gray-800">面试问题 #{currentQuestionIndex}</h3>
                 <p className="text-sm text-gray-600">面试方向: {getDirectionNames(selectedDirections)}</p>
               </div>
             </div>

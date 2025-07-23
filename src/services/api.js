@@ -301,7 +301,6 @@ export const getInterviewQuestion = async () => {
         return {
           success: true,
           question: data,
-          questionIndex: null,
           isEnd: false,
           hasNextQuestion: true,
           message: response.data.message
@@ -312,7 +311,6 @@ export const getInterviewQuestion = async () => {
       return {
         success: true,
         question: data?.question || data,
-        questionIndex: data?.questionIndex,
         isEnd: data?.isEnd || false,
         hasNextQuestion: !data?.isEnd,
         message: response.data.message
